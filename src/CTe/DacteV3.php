@@ -91,8 +91,7 @@ class DacteV3 extends Common
     protected $preVisualizar;
     protected $flagDocOrigContinuacao;
     protected $arrayNFe = array();
-    protected $siteDesenvolvedor;
-    protected $nomeDesenvolvedor;
+    protected $copyright;
     protected $totPag;
     protected $idDocAntEle = [];
 
@@ -119,8 +118,7 @@ class DacteV3 extends Common
         $fonteDACTE = '',
         $mododebug = 2,
         $preVisualizar = false,
-        $nomeDesenvolvedor = 'Powered by NFePHP (GNU/GPLv3 GNU/LGPLv3) © www.nfephp.org',
-        $siteDesenvolvedor = 'http://www.nfephp.org'
+        $copyright = ''
     ) {
 
         if (is_numeric($mododebug)) {
@@ -143,8 +141,7 @@ class DacteV3 extends Common
         $this->destino = $sDestino;
         $this->pdfDir = $sDirPDF;
         $this->preVisualizar = $preVisualizar;
-        $this->siteDesenvolvedor = $siteDesenvolvedor;
-        $this->nomeDesenvolvedor = $nomeDesenvolvedor;
+        $this->copyright = $copyright;
         // verifica se foi passa a fonte a ser usada
         if (!empty($fonteDACTE)) {
             $this->fontePadrao = $fonteDACTE;
@@ -203,11 +200,7 @@ class DacteV3 extends Common
             $this->ICMSSN = $this->dom->getElementsByTagName("ICMSSN")->item(0);
             $this->ICMSOutraUF = $this->dom->getElementsByTagName("ICMSOutraUF")->item(0);
             $this->imp = $this->dom->getElementsByTagName("imp")->item(0);
-            if (!empty($this->pSimpleGetValue($this->imp, "vTotTrib"))) {
-                $textoAdic = number_format($this->pSimpleGetValue($this->imp, "vTotTrib"), 2, ",", ".");
-                $this->textoAdic = "o valor aproximado de tributos incidentes sobre o preço deste serviço é de R$"
-                        .$textoAdic;
-            }
+            $this->textoAdic = $this->dom->getElementsByTagName("ObsCont")->getElementsByTagName("xTexto")->item(0);
             $this->toma4 = $this->dom->getElementsByTagName("toma4")->item(0);
             $this->toma03 = $this->dom->getElementsByTagName("toma3")->item(0);
             //Tag tomador é identificado por toma03 na versão 2.00
@@ -1230,12 +1223,7 @@ class DacteV3 extends Common
             'size' => 6,
             'style' => '');
         $this->pTextBox($x, $y, $w, 4, $texto, $aFont, 'T', 'L', 0, '');
-        $texto = 'Desenvolvido por '.$this->nomeDesenvolvedor . ' - '. $this->siteDesenvolvedor;
-        $aFont = array(
-            'font' => $this->fontePadrao,
-            'size' => 6,
-            'style' => '');
-        $this->pTextBox($x, $y, $w, 4, $texto, $aFont, 'T', 'R', 0, $this->siteDesenvolvedor);
+        $texto = $this->copyright;
     } //fim zRodape
 
     /**
@@ -3397,10 +3385,7 @@ class DacteV3 extends Common
         $this->pTextBox($x, $y, $w, $h, $texto, $aFont, 'T', 'C', 1, '');
         //$this->pdf->Line($x, $y + 3, $w * 1.385, $y + 3);
         $this->pdf->Line($x, $y + 3, $w * 1.385, $y + 3);
-        //o texto com os dados adicionais foi obtido na função xxxxxx
-        //e carregado em uma propriedade privada da classe
-        //$this->wAdic com a largura do campo
-        //$this->textoAdic com o texto completo do campo
+        
         $y += 1;
         $aFont = $this->formatPadrao;
         $this->pTextBox($x, $y + 3, $w - 2, $h - 3, $this->textoAdic, $aFont, 'T', 'L', 0, '', false);
