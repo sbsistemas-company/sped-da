@@ -200,7 +200,12 @@ class DacteV3 extends Common
             $this->ICMSSN = $this->dom->getElementsByTagName("ICMSSN")->item(0);
             $this->ICMSOutraUF = $this->dom->getElementsByTagName("ICMSOutraUF")->item(0);
             $this->imp = $this->dom->getElementsByTagName("imp")->item(0);
-            $this->textoAdic = $this->dom->getElementsByTagName("ObsCont")->getElementsByTagName("xTexto")->item(0);
+            
+            $obsCont = $this->dom->getElementsByTagName("ObsCont");
+            foreach ($obsCont as $obs) {
+                $this->textoAdic .= $this->pSimpleGetValue($obs, "xTexto")."\n";
+            }
+            $this->textoAdic = rtrim($this->textoAdic, "\n");
             $this->toma4 = $this->dom->getElementsByTagName("toma4")->item(0);
             $this->toma03 = $this->dom->getElementsByTagName("toma3")->item(0);
             //Tag tomador é identificado por toma03 na versão 2.00
