@@ -2668,7 +2668,7 @@ class DacteV3 extends Common
                 $yIniDados += 3.5;
             }
 
-            if($this->cteSub->getElementsByTagName('refCTe')->item(0)->nodeValue){
+            if($this->cteSub->getElementsByTagName('refCTe')->length && $this->cteSub->getElementsByTagName('refCTe')->item(0)->nodeValue){
                 $texto = $this->cteSub->getElementsByTagName('refCTe')->item(0)->nodeValue;
                 $aFont = array(
                     'font' => $this->fontePadrao,
