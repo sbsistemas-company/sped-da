@@ -122,8 +122,8 @@ class DacteV3 extends Common
         $fonteDACTE = '',
         $mododebug = 2,
         $preVisualizar = false,
-        $nomeDesenvolvedor = 'Powered by NFePHP (GNU/GPLv3 GNU/LGPLv3) © www.nfephp.org',
-        $siteDesenvolvedor = 'http://www.nfephp.org'
+        $nomeDesenvolvedor = 'Simple CT-e',
+        $siteDesenvolvedor = 'https://simplescte.com.br/'
     ) {
 
         if (is_numeric($mododebug)) {
@@ -366,12 +366,12 @@ class DacteV3 extends Common
         }
         if ($this->orientacao == 'P') {
             // margens do PDF
-            $margSup = 2;
-            $margEsq = 2;
-            $margDir = 2;
+            $margSup = 7;
+            $margEsq = 7;
+            $margDir = 7;
             // posição inicial do relatorio
-            $xInic = 1;
-            $yInic = 1;
+            $xInic = 7;
+            $yInic = 7;
             if ($papel == 'A4') {
                 //A4 210x297mm
                 $maxW = 210;
@@ -417,15 +417,15 @@ class DacteV3 extends Common
         $x = $xInic;
         $y = $yInic;
         //coloca o cabeçalho
-        //$r = $this->zCabecalho($x, $y, $pag, $totPag);
+        $r = $this->zCabecalho($x, $y, $pag, $totPag);
         $y += 70;
         $r = $this->zRemetente($x, $y);
-        $x = $this->wPrint * 0.5 + 2;
+        $x = $this->wPrint * 0.5 + 8;
         $r = $this->zDestinatario($x, $y);
         $y += 19;
         $x = $xInic;
         $r = $this->zExpedidor($x, $y);
-        $x = $this->wPrint * 0.5 + 2;
+        $x = $this->wPrint * 0.5 + 8;
         $r = $this->zRecebedor($x, $y);
         $y += 19;
         $x = $xInic;
@@ -460,7 +460,7 @@ class DacteV3 extends Common
             }
             $x = $xInic;
             $r = $this->zObs($x, $y);
-            $y = $y-6;
+            $y = $y-10;
             switch ($this->modal) {
                 case '1':
                     $y += 25.9;
@@ -503,7 +503,7 @@ class DacteV3 extends Common
                 $y += 37;
             }
         } else {
-            $r = $this->zCabecalho(1, 1, $pag, $totPag);
+            //$r = $this->zCabecalho(1, 1, $pag, $totPag);
             //Complementado
             $y += 10;
             $x = $xInic;
@@ -520,6 +520,7 @@ class DacteV3 extends Common
             $y += 15;
         }
         $x = $xInic;
+        $y -= 1.3;
         $r = $this->zDadosAdic($x, $y, $pag, $totPag);
 
         //$y += 19;
@@ -693,7 +694,7 @@ class DacteV3 extends Common
             'font' => $this->fontePadrao,
             'size' => 8,
             'style' => '');
-        $this->pTextBox($x, $y1, $w * 0.5, $h1, $texto, $aFont, 'T', 'C', 0, '');
+        $this->pTextBox($x-4, $y1, $w * 0.5, $h1, $texto, $aFont, 'T', 'C', 0, '');
         $tpCTe = $this->pSimpleGetValue($this->ide, "tpCTe");
         //0 - CT-e Normal,1 - CT-e de Complemento de Valores,
         //2 - CT-e de Anulação de Valores,3 - CT-e Substituto
@@ -714,7 +715,7 @@ class DacteV3 extends Common
                 $texto = 'ERRO' . $tpCTe;// . $tpServ;
         }
         $aFont = $this->formatNegrito;
-        $this->pTextBox($x, $y1 + 3, $w * 0.5, $h1, $texto, $aFont, 'T', 'C', 0, '', false);
+        $this->pTextBox($x - 4, $y1 + 3, $w * 0.5, $h1, $texto, $aFont, 'T', 'C', 0, '', false);
         //TIPO DO SERVIÇO
         $texto = 'TIPO DO SERVIÇO';
         $wb = 36;
@@ -722,7 +723,7 @@ class DacteV3 extends Common
             'font' => $this->fontePadrao,
             'size' => 8,
             'style' => '');
-        $this->pTextBox($x + $wa + 4.5, $y1, $w * 0.5, $h1, $texto, $aFont, 'T', 'C', 0, '');
+        $this->pTextBox($x + $wa, $y1, $w * 0.5, $h1, $texto, $aFont, 'T', 'C', 0, '');
         $tpServ = $this->pSimpleGetValue($this->ide, "tpServ");
         //0 - Normal;1 - Subcontratação;2 - Redespacho;3 - Redespacho Intermediário
         switch ($tpServ) {
@@ -742,7 +743,7 @@ class DacteV3 extends Common
                 $texto = 'ERRO' . $tpServ;
         }
         $aFont = $this->formatNegrito;
-        $this->pTextBox($x + $wa + 4.5, $y1 + 3, $w * 0.5, $h1, $texto, $aFont, 'T', 'C', 0, '', false);
+        $this->pTextBox($x + $wa, $y1 + 3, $w * 0.5, $h1, $texto, $aFont, 'T', 'C', 0, '', false);
         $this->pdf->Line($w * 0.5, $y1, $w * 0.5, $y1 + $h1);
         //TOMADOR DO SERVIÇO
         $texto = 'INDICADOR DO CT-E GLOBALIZADO';
@@ -750,10 +751,10 @@ class DacteV3 extends Common
         $y2 = $y1 + 8;
         $aFont = array(
             'font' => $this->fontePadrao,
-            'size' => 6,
+            'size' => 5,
             'style' => '');
-        $this->pTextBox($x, $y2, $w * 0.5, $h1, $texto, $aFont, 'T', 'C', 0, '');
-        $this->pdf->Line($x, $y1 + 8, $w + 3, $y1 + 8);
+        $this->pTextBox($x-4, $y2, $w * 0.5, $h1, $texto, $aFont, 'T', 'C', 0, '');
+        $this->pdf->Line($x, $y1 + 8, $w + 9, $y1 + 8);
         $toma = $this->pSimpleGetValue($this->ide, "indGlobalizado");
         //0-Remetente;1-Expedidor;2-Recebedor;3-Destinatário;4 - Outros
         if ($toma==1) {
@@ -770,16 +771,16 @@ class DacteV3 extends Common
             $this->pTextBox($x+3.5, $y2 + 3.5, $w * 0.5, $h1, 'X', $aFont, 'T', 'C', 0, '', false);
         }
         $aFont = $this->formatNegrito;
-        $this->pdf->Line($x+5, $x+48, $x+5, $x+52);
-        $this->pdf->Line($x+10, $x+48, $x+10, $x+52);
-        $this->pdf->Line($x+5, $x+48, $x+10, $x+48);
-        $this->pdf->Line($x+5, $x+52, $x+10, $x+52);
+        $this->pdf->Line($x+4, $x+48, $x+4, $x+52);
+        $this->pdf->Line($x+9, $x+48, $x+9, $x+52);
+        $this->pdf->Line($x+4, $x+48, $x+9, $x+48);
+        $this->pdf->Line($x+4, $x+52, $x+9, $x+52);
         $this->pTextBox($x-9, $y2+1.4 + 3, $w * 0.5, $h1, 'SIM', $aFont, 'T', 'C', 0, '', false);
 
-        $this->pdf->Line($x+23, $x+48, $x+23, $x+52);
-        $this->pdf->Line($x+28, $x+48, $x+28, $x+52);
-        $this->pdf->Line($x+23, $x+48, $x+28, $x+48);
-        $this->pdf->Line($x+23, $x+52, $x+28, $x+52);
+        $this->pdf->Line($x+22, $x+48, $x+22, $x+52);
+        $this->pdf->Line($x+27, $x+48, $x+27, $x+52);
+        $this->pdf->Line($x+22, $x+48, $x+27, $x+48);
+        $this->pdf->Line($x+22, $x+52, $x+27, $x+52);
         $this->pTextBox($x+9.8, $y2+1.4 + 3, $w * 0.5, $h1, 'NÃO', $aFont, 'T', 'C', 0, '', false);
 
         //FORMA DE PAGAMENTO
@@ -789,7 +790,7 @@ class DacteV3 extends Common
             'font' => $this->fontePadrao,
             'size' => 8,
             'style' => '');
-        $this->pTextBox($x+2 + $wa + 4.5, $y2-0.7, $w * 0.5, $h1, $texto, $aFont, 'T', 'C', 0, '');
+        $this->pTextBox($x + $wa + 1.5, $y2-0.7, $w * 0.5, $h1, $texto, $aFont, 'T', 'C', 0, '');
         $forma = $this->pSimpleGetValue($this->ide, "forPag");
         //##################################################################
         //coluna direita
@@ -850,7 +851,7 @@ class DacteV3 extends Common
         $w = $w1 + $w2 + 2;
         $this->pTextBox($x, $y, $w + 0.5, $h + 1);
         //modelo
-        $wa = 12;
+        $wa = 9;
         $xa = $x;
         $texto = 'MODELO';
         $aFont = array(
@@ -1102,12 +1103,12 @@ class DacteV3 extends Common
         if ($tpAmb != 1 && $this->preVisualizar=='0') { // caso não seja uma DA de produção
             $x = 10;
             if ($this->orientacao == 'P') {
-                $y = round($this->hPrint * 2 / 3, 0);
+                $y = round($this->hPrint * 2 / 2.9, 0);
             } else {
                 $y = round($this->hPrint / 2, 0);
             }
             $h = 5;
-            $w = $maxW - (2 * $x);
+            $w = $maxW - (1 * $x);
             $this->pdf->SetTextColor(90, 90, 90);
             $texto = "SEM VALOR FISCAL";
             $aFont = array(
@@ -1227,19 +1228,35 @@ class DacteV3 extends Common
      */
     protected function zRodape($x, $y)
     {
-        $texto = "Impresso em  " . date('d/m/Y   H:i:s');
-        $w = $this->wPrint - 4;
-        $aFont = array(
-            'font' => $this->fontePadrao,
-            'size' => 6,
-            'style' => '');
-        $this->pTextBox($x, $y, $w, 4, $texto, $aFont, 'T', 'L', 0, '');
-        $texto = 'Desenvolvido por '.$this->nomeDesenvolvedor . ' - '. $this->siteDesenvolvedor;
-        $aFont = array(
-            'font' => $this->fontePadrao,
-            'size' => 6,
-            'style' => '');
-        $this->pTextBox($x, $y, $w, 4, $texto, $aFont, 'T', 'R', 0, $this->siteDesenvolvedor);
+        if($this->tpCTe == '0'){
+            $texto = "Impresso em  " . date('d/m/Y   H:i:s');
+            $w = $this->wPrint - 4;
+            $aFont = array(
+                'font' => $this->fontePadrao,
+                'size' => 6,
+                'style' => '');
+            $this->pTextBox($x+5, $y+10, $w, 4, $texto, $aFont, 'T', 'L', 0, '');
+            $texto = 'Desenvolvido por '.$this->nomeDesenvolvedor . ' - '. $this->siteDesenvolvedor;
+            $aFont = array(
+                'font' => $this->fontePadrao,
+                'size' => 6,
+                'style' => '');
+            $this->pTextBox($x+8, $y+10, $w, 4, $texto, $aFont, 'T', 'R', 0, $this->siteDesenvolvedor);
+        } else {
+            $texto = "Impresso em  " . date('d/m/Y   H:i:s');
+            $w = $this->wPrint - 4;
+            $aFont = array(
+                'font' => $this->fontePadrao,
+                'size' => 6,
+                'style' => '');
+            $this->pTextBox($x+5, $y+10, $w, 4, $texto, $aFont, 'T', 'L', 0, '');
+            $texto = 'Desenvolvido por '.$this->nomeDesenvolvedor . ' - '. $this->siteDesenvolvedor;
+            $aFont = array(
+                'font' => $this->fontePadrao,
+                'size' => 6,
+                'style' => '');
+            $this->pTextBox($x+8, $y+10, $w, 4, $texto, $aFont, 'T', 'R', 0, $this->siteDesenvolvedor);
+        }
     } //fim zRodape
 
     /**
@@ -1261,7 +1278,7 @@ class DacteV3 extends Common
         }
         $w = $maxW * 0.5 + 0.5;
         $h = 19;
-        $x1 = $x + 16;
+        $x1 = $x + 14;
         $texto = 'REMETENTE';
         $aFont = $this->formatPadrao;
         $this->pTextBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 1, '');
@@ -1292,10 +1309,10 @@ class DacteV3 extends Common
         $x = $w - 18;
         $texto = 'CEP';
         $aFont = $this->formatPadrao;
-        $this->pTextBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x-27, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $texto = $this->pFormat($this->pSimpleGetValue($this->enderReme, "CEP"), "#####-###");
         $aFont = $this->formatNegrito;
-        $this->pTextBox($x + 6, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x+1, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $x = $oldX;
         $y += 3;
         $texto = 'CNPJ/CPF';
@@ -1323,7 +1340,7 @@ class DacteV3 extends Common
         $x = $w - 25;
         $texto = 'FONE';
         $aFont = $this->formatPadrao;
-        $this->pTextBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x-20, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         //$texto = $this->zFormatFone($this->rem);
         $texto = $this->pSimpleGetValue($this->rem, "fone")!=""? $this->zFormatFone($this->rem):'';
         $aFont = $this->formatNegrito;
@@ -1349,7 +1366,7 @@ class DacteV3 extends Common
         }
         $w = ($maxW * 0.5) - 0.7;
         $h = 19;
-        $x1 = $x + 19;
+        $x1 = $x + 17;
         $texto = 'DESTINATÁRIO';
         $aFont = $this->formatPadrao;
         $this->pTextBox($x - 0.5, $y, $w, $h, $texto, $aFont, 'T', 'L', 1, '');
@@ -1380,10 +1397,10 @@ class DacteV3 extends Common
         $x = $w - 19 + $oldX;
         $texto = 'CEP';
         $aFont = $this->formatPadrao;
-        $this->pTextBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x-28.5, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $texto = $this->pFormat($this->pSimpleGetValue($this->enderDest, "CEP"), "#####-###");
         $aFont = $this->formatNegrito;
-        $this->pTextBox($x + 5, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x-0.5, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $x = $oldX;
         $y += 3;
         $texto = 'CNPJ/CPF';
@@ -1410,11 +1427,11 @@ class DacteV3 extends Common
         $x = $w - 27 + $oldX;
         $texto = 'FONE';
         $aFont = $this->formatPadrao;
-        $this->pTextBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x-20.5, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         //$texto = $this->zFormatFone($this->dest);
         $texto = $this->pSimpleGetValue($this->dest, "fone")!=""? $this->zFormatFone($this->dest):'';
         $aFont = $this->formatNegrito;
-        $this->pTextBox($x + 8, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x + 7.5, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
     } //fim da função destinatarioDACTE
 
     /**
@@ -1436,7 +1453,7 @@ class DacteV3 extends Common
         }
         $w = $maxW * 0.5 + 0.5;
         $h = 19;
-        $x1 = $x + 16;
+        $x1 = $x + 14;
         $texto = 'EXPEDIDOR';
         $aFont = $this->formatPadrao;
         $this->pTextBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 1, '');
@@ -1476,10 +1493,10 @@ class DacteV3 extends Common
         $x = $w - 18;
         $texto = 'CEP';
         $aFont = $this->formatPadrao;
-        $this->pTextBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x-27, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $texto = $this->pFormat($this->pSimpleGetValue($this->enderExped, "CEP"), "#####-###");
         $aFont = $this->formatNegrito;
-        $this->pTextBox($x + 6, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x + 1, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $x = $oldX;
         $y += 3;
         $texto = 'CNPJ/CPF';
@@ -1506,7 +1523,7 @@ class DacteV3 extends Common
         $x = $w - 25;
         $texto = 'FONE';
         $aFont = $this->formatPadrao;
-        $this->pTextBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x-20, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         if (isset($this->exped)) {
             $texto = $this->pSimpleGetValue($this->exped, "fone")!=""? $this->zFormatFone($this->exped):'';
             $aFont = $this->formatNegrito;
@@ -1533,7 +1550,7 @@ class DacteV3 extends Common
         }
         $w = ($maxW * 0.5) - 0.7;
         $h = 19;
-        $x1 = $x + 19;
+        $x1 = $x + 17;
         $texto = 'RECEBEDOR';
         $aFont = $this->formatPadrao;
         $this->pTextBox($x - 0.5, $y, $w, $h, $texto, $aFont, 'T', 'L', 1, '');
@@ -1573,10 +1590,10 @@ class DacteV3 extends Common
         $x = $w - 19 + $oldX;
         $texto = 'CEP';
         $aFont = $this->formatPadrao;
-        $this->pTextBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x-28, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $texto = $this->pFormat($this->pSimpleGetValue($this->enderReceb, "CEP"), "#####-###");
         $aFont = $this->formatNegrito;
-        $this->pTextBox($x + 5, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $x = $oldX;
         $y += 3;
         $texto = 'CNPJ/CPF';
@@ -1603,7 +1620,7 @@ class DacteV3 extends Common
         $x = $w - 27 + $oldX;
         $texto = 'FONE';
         $aFont = $this->formatPadrao;
-        $this->pTextBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x-20, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         if (isset($this->receb)) {
             $texto = $this->pSimpleGetValue($this->receb, "fone")!=""? $this->zFormatFone($this->receb):'';
             $aFont = $this->formatNegrito;
@@ -1635,14 +1652,14 @@ class DacteV3 extends Common
         $this->pTextBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 1, '');
         $aFont = $this->formatNegrito;
         $texto = $this->pSimpleGetValue($this->toma, "xNome");
-        $this->pTextBox($x + 29, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x + 27, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $x = $maxW * 0.60;
         $texto = 'MUNICÍPIO';
         $aFont = $this->formatPadrao;
-        $this->pTextBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x+3, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $texto = $this->pSimpleGetValue($this->toma, "xMun");
         $aFont = $this->formatNegrito;
-        $this->pTextBox($x + 15, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x + 16, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $x = $maxW * 0.85;
         $texto = 'UF';
         $aFont = $this->formatPadrao;
@@ -1668,36 +1685,36 @@ class DacteV3 extends Common
         $texto .= ($this->pSimpleGetValue($this->toma, "xCpl") != "") ?
             ' - ' . $this->pSimpleGetValue($this->toma, "xCpl") : '';
         $texto .= ' - ' . $this->pSimpleGetValue($this->toma, "xBairro");
-        $this->pTextBox($x + 16, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x + 14, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $y += 3;
         $texto = 'CNPJ/CPF';
         $aFont = $this->formatPadrao;
         $this->pTextBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $texto = $this->zFormatCNPJCPF($this->toma);
         $aFont = $this->formatNegrito;
-        $this->pTextBox($x + 13, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x + 11, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $x = $x + 65;
         $texto = 'INSCRIÇÃO ESTADUAL';
         $aFont = $this->formatPadrao;
         $this->pTextBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $texto = $this->pSimpleGetValue($this->toma, "IE");
         $aFont = $this->formatNegrito;
-        $this->pTextBox($x + 28, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x + 26, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $x = $w * 0.75;
         $texto = 'PAÍS';
         $aFont = $this->formatPadrao;
-        $this->pTextBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x-27, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $texto = $this->pSimpleGetValue($this->toma, "xPais") != "" ?
             $this->pSimpleGetValue($this->toma, "xPais") : 'BRASIL';
         $aFont = $this->formatNegrito;
-        $this->pTextBox($x + 6, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x-21, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $x = $w - 27;
         $texto = 'FONE';
         $aFont = $this->formatPadrao;
-        $this->pTextBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x-3, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $texto = $this->pSimpleGetValue($this->toma, "fone")!=""? $this->zFormatFone($this->toma):'';
         $aFont = $this->formatNegrito;
-        $this->pTextBox($x + 8, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x + 5, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
     } //fim da função tomadorDACTE
 
     /**
@@ -1748,7 +1765,7 @@ class DacteV3 extends Common
         $this->pTextBox($x + 1, $y + 3, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
         $y += 8;
         $x = $oldX;
-        $this->pdf->Line($x, $y, $w + 1, $y);
+        $this->pdf->Line($x, $y, $w + 7, $y);
 
         /**
          * Identifica cÃ³digo da unidade
@@ -1762,7 +1779,7 @@ class DacteV3 extends Common
                 'font' => $this->fontePadrao,
                 'size' => 5,
                 'style' => '');
-            $this->pTextBox($x+8, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
+            $this->pTextBox($x+7, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
             $qCarga = $this->pSimpleGetValue($this->infQ->item(0), "qCarga");
 
             $texto =
@@ -1786,7 +1803,7 @@ class DacteV3 extends Common
                 'font' => $this->fontePadrao,
                 'size' => 5,
                 'style' => '');
-            $this->pTextBox($x+20, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
+            $this->pTextBox($x+23, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
             $qCarga = $this->pSimpleGetValue($this->infQ->item(1), "qCarga");
 
             $texto = '';
@@ -1828,7 +1845,7 @@ class DacteV3 extends Common
                 'style' => 'B');
             $this->pTextBox($x+28, $y + 3, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
             $x = $w * 0.36;
-            $this->pdf->Line($x+41.3, $y, $x+41.3, $y + 9);
+            $this->pdf->Line($x+39.2, $y, $x+39.2, $y + 9);
         }
 
         /**
@@ -1836,7 +1853,7 @@ class DacteV3 extends Common
          */{
             $texto = 'CUBAGEM(M3)';
             $aFont = $this->formatPadrao;
-            $this->pTextBox($x+60, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
+            $this->pTextBox($x+55, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
             $qCarga = '';
             foreach ($this->infQ as $infQ) {
                 if ($this->pSimpleGetValue($infQ, "cUnid") == '00') {
@@ -1873,7 +1890,7 @@ class DacteV3 extends Common
                 'style' => 'B');
             $this->pTextBox($x+85, $y + 3, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
             $x = $w * 0.53;
-            $this->pdf->Line($x+56, $y, $x+56, $y + 9);
+            $this->pdf->Line($x+52.9, $y, $x+52.9, $y + 9);
         }
     }
     } //fim da função zDescricaoCarga
@@ -1901,7 +1918,7 @@ class DacteV3 extends Common
         $aFont = $this->formatPadrao;
         $this->pTextBox($x, $y, $w, $h, $texto, $aFont, 'T', 'C', 1, '');
         $y += 3.4;
-        $this->pdf->Line($x, $y, $w + 1, $y);
+        $this->pdf->Line($x, $y, $w + 7, $y);
         $texto = 'NOME';
         $aFont = $this->formatPadrao;
         $this->pTextBox($x, $y, $w * 0.14, $h, $texto, $aFont, 'T', 'L', 0, '');
@@ -1909,25 +1926,25 @@ class DacteV3 extends Common
         $x = $w * 0.14;
         $texto = 'VALOR';
         $aFont = $this->formatPadrao;
-        $this->pTextBox($x, $y, $w * 0.14, $h, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x+4, $y, $w * 0.14, $h, $texto, $aFont, 'T', 'L', 0, '');
         $x = $w * 0.28;
-        $this->pdf->Line($x, $y, $x, $y + 21.5);
+        $this->pdf->Line($x+4, $y, $x+4, $y + 21.5);
         $texto = 'NOME';
         $aFont = $this->formatPadrao;
-        $this->pTextBox($x, $y, $w * 0.14, $h, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x+4, $y, $w * 0.14, $h, $texto, $aFont, 'T', 'L', 0, '');
         $x = $w * 0.42;
         $texto = 'VALOR';
         $aFont = $this->formatPadrao;
-        $this->pTextBox($x, $y, $w * 0.14, $h, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x+4, $y, $w * 0.14, $h, $texto, $aFont, 'T', 'L', 0, '');
         $x = $w * 0.56;
-        $this->pdf->Line($x, $y, $x, $y + 21.5);
+        $this->pdf->Line($x+4, $y, $x+4, $y + 21.5);
         $texto = 'NOME';
         $aFont = $this->formatPadrao;
-        $this->pTextBox($x, $y, $w * 0.14, $h, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x+4, $y, $w * 0.14, $h, $texto, $aFont, 'T', 'L', 0, '');
         $x = $w * 0.70;
         $texto = 'VALOR';
         $aFont = $this->formatPadrao;
-        $this->pTextBox($x, $y, $w * 0.14, $h, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x+4, $y, $w * 0.14, $h, $texto, $aFont, 'T', 'L', 0, '');
         $x = $w * 0.86;
         $this->pdf->Line($x, $y, $x, $y + 21.5);
         $y += 1;
@@ -1941,7 +1958,7 @@ class DacteV3 extends Common
             'style' => 'B');
         $this->pTextBox($x, $y + 4, $w * 0.14, $h, $texto, $aFont, 'T', 'C', 0, '');
         $y += 10;
-        $this->pdf->Line($x, $y, $w + 1, $y);
+        $this->pdf->Line($x, $y, $w + 7, $y);
         $y += 1;
         $texto = 'VALOR A RECEBER';
         $aFont = $this->formatPadrao;
@@ -2001,7 +2018,7 @@ class DacteV3 extends Common
         $this->pTextBox($x, $y, $w, $h, $texto, $aFont, 'T', 'C', 1, '');
 
         $y += 3.4;
-        $this->pdf->Line($x, $y, $w + 1, $y);
+        $this->pdf->Line($x, $y, $w + 7, $y);
         $texto = 'SITUAÇÃO TRIBUTÁRIA';
         $aFont = $this->formatPadrao;
         $this->pTextBox($x, $y, $w * 0.26, $h, $texto, $aFont, 'T', 'L', 0, '');
@@ -2196,7 +2213,7 @@ class DacteV3 extends Common
         $descr3 = 'SÉRIE/NRO. DOCUMENTO';
 
         $y += 3.4;
-        $this->pdf->Line($x, $y, $w + 1, $y); // LINHA ABAIXO DO TEXTO: "DOCUMENTOS ORIGINÁRIOS
+        $this->pdf->Line($x, $y, $w + 7, $y); // LINHA ABAIXO DO TEXTO: "DOCUMENTOS ORIGINÁRIOS
         $texto = $descr1;
         $aFont = $this->formatPadrao;
         $this->pTextBox($x, $y, $w * 0.10, $h, $texto, $aFont, 'T', 'L', 0, '');
@@ -2323,7 +2340,7 @@ class DacteV3 extends Common
                 $this->totPag = 1;
                 break;
         }
-        $r = $this->zCabecalho(1, 1, '1', $this->totPag);
+        //$r = $this->zCabecalho(1, 1, '1', $this->totPag);
         $contador = 0;
         while ($contador < count($this->arrayNFe)) {
             if ($contador == 15) {
@@ -2447,7 +2464,7 @@ class DacteV3 extends Common
             $x = $x2;
             $y = $y2;
             $this->pdf->AddPage($this->orientacao, $this->papel);
-            $r = $this->zCabecalho(1, 1, $i, $this->totPag);
+            //$r = $this->zCabecalho(1, 1, $i, $this->totPag);
             $oldX = $x;
             $oldY = $y;
             if ($this->orientacao == 'P') {
@@ -2593,7 +2610,7 @@ class DacteV3 extends Common
         $this->pTextBox($x, $y, $w, $h, $texto, $aFont, 'T', 'C', 1, '');
 
         $y += 3.4;
-        $this->pdf->Line($x, $y, $w + 1, $y);
+        $this->pdf->Line($x, $y, $w + 7, $y);
         $texto = $descr1;
         $aFont = $this->formatPadrao;
         $this->pTextBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
@@ -2719,12 +2736,12 @@ class DacteV3 extends Common
         }
         $w = $maxW;
         //$h = 18;
-        $h = 18.8;
+        $h = 14.8;
         $texto = 'OBSERVAÇÕES';
         $aFont = $this->formatPadrao;
         $this->pTextBox($x, $y, $w, $h, $texto, $aFont, 'T', 'C', 1, '');
         $y += 3.4;
-        $this->pdf->Line($x, $y, $w + 1, $y);
+        $this->pdf->Line($x, $y, $w + 7, $y);
         $auxX = $oldX;
         $yIniDados = $y;
         $texto = '';
@@ -2770,7 +2787,7 @@ class DacteV3 extends Common
             $this->pdf->Line($x, $y + 12, $w + 1, $y + 12); // LINHA DE BAIXO
         }
         $y += 3.4;
-        $this->pdf->Line($x, $y, $w + 1, $y); // LINHA DE CIMA
+        $this->pdf->Line($x, $y, $w + 7, $y); // LINHA DE CIMA
         $texto = 'RNTRC DA EMPRESA';
         $aFont = $this->formatPadrao;
         $this->pTextBox($x, $y, $w * 0.23, $h, $texto, $aFont, 'T', 'L', 0, '');
@@ -2779,7 +2796,7 @@ class DacteV3 extends Common
         $this->pTextBox($x, $y + 3, $w * 0.23, $h, $texto, $aFont, 'T', 'L', 0, '');
         $x += $w * 0.23;
 
-        $this->pdf->Line($x-20, $y, $x-20, $y + 8.5); // LINHA A FRENTE DA RNTRC DA EMPRESA
+        $this->pdf->Line($x-20, $y, $x-20, $y + 6.1); // LINHA A FRENTE DA RNTRC DA EMPRESA
 
         $texto = 'ESTE CONHECIMENTO DE TRANSPORTE ATENDE À LEGISLAÇÃO DE TRANSPORTE RODOVIÁRIO EM VIGOR';
         $aFont = $this->formatPadrao;
@@ -3324,7 +3341,7 @@ class DacteV3 extends Common
         $aFont = $this->formatPadrao;
         $this->pTextBox($x, $y, $w, $h, $texto, $aFont, 'T', 'C', 1, '');
         $y += 3.4;
-        $this->pdf->Line($x, $y, $w + 1, $y); // LINHA ABAICO DO TEXTO DECLARO QUE RECEBI...
+        $this->pdf->Line($x, $y, $w + 7, $y); // LINHA ABAICO DO TEXTO DECLARO QUE RECEBI...
 
         $texto = 'NOME';
         $aFont = array(
@@ -3356,7 +3373,7 @@ class DacteV3 extends Common
         $x = $oldX;
         $y = $y + 5;
 
-        $this->pdf->Line($x, $y+3, $w * 0.255, $y+3); // LINHA HORIZONTAL ACIMA DO RG ABAIXO DO NOME
+        $this->pdf->Line($x, $y+3, $w * 0.286, $y+3); // LINHA HORIZONTAL ACIMA DO RG ABAIXO DO NOME
 
         $texto = 'RG';
         $aFont = array(
@@ -3412,7 +3429,7 @@ class DacteV3 extends Common
             'style' => '');
         $this->pTextBox($x, $y, $w, $h, $texto, $aFont, 'T', 'C', 1, '');
         //$this->pdf->Line($x, $y + 3, $w * 1.385, $y + 3);
-        $this->pdf->Line($x, $y + 3, $w * 1.385, $y + 3);
+        $this->pdf->Line($x, $y + 3, $w + 53, $y + 3);
         //o texto com os dados adicionais foi obtido na função xxxxxx
         //e carregado em uma propriedade privada da classe
         //$this->wAdic com a largura do campo
