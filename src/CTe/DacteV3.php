@@ -125,7 +125,6 @@ class DacteV3 extends Common
         $nomeDesenvolvedor = 'Simple CT-e',
         $siteDesenvolvedor = 'https://simplescte.com.br/'
     ) {
-
         if (is_numeric($mododebug)) {
             $this->debugMode = $mododebug;
         }
@@ -1126,29 +1125,29 @@ class DacteV3 extends Common
         } elseif ($this->preVisualizar=='1') { // caso seja uma DA de Pré-Visualização
             $h = 5;
             $w = $maxW - (2 * 10);
-            $x = 55;
-            $y = 240;
+            $x = -20;
+            $y = 190;
             $this->pdf->SetTextColor(255, 100, 100);
             $aFont = array(
                 'font' => $this->fontePadrao,
                 'size' => 40,
                 'style' => 'B');
             $texto = "Pré-visualização";
-            $this->pTextBox90($x, $y, $w, $h, $texto, $aFont, 'C', 'C', 0, '');
+            $this->pTextBox($x+35, $y, $w, $h, $texto, $aFont, 'C', 'C', 0, '');
             $this->pdf->SetTextColor(255, 100, 100);
             $aFont = array(
                 'font' => $this->fontePadrao,
                 'size' => 41,
                 'style' => 'B');
             $texto = "Sem Validade Jurídica";
-            $this->pTextBox90($x+20, $y, $w, $h, $texto, $aFont, 'C', 'C', 0, '');
+            $this->pTextBox($x+40, $y+15, $w, $h, $texto, $aFont, 'C', 'C', 0, '');
             $this->pdf->SetTextColor(90, 90, 90);
             $texto = "SEM VALOR FISCAL";
             $aFont = array(
                 'font' => $this->fontePadrao,
                 'size' => 48,
                 'style' => 'B');
-            $this->pTextBox90($x+40, $y, $w, $h, $texto, $aFont, 'C', 'C', 0, '');
+            $this->pTextBox($x+40, $y+30, $w, $h, $texto, $aFont, 'C', 'C', 0, '');
             $this->pdf->SetTextColor(0, 0, 0); // voltar a cor default
         } else {
             $x = 10;
