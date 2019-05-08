@@ -122,7 +122,7 @@ class DacteV3 extends Common
         $fonteDACTE = '',
         $mododebug = 2,
         $preVisualizar = false,
-        $nomeDesenvolvedor = 'Simple CT-e',
+        $nomeDesenvolvedor = 'Simples CT-e',
         $siteDesenvolvedor = 'https://simplescte.com.br/'
     ) {
         if (is_numeric($mododebug)) {
@@ -207,9 +207,9 @@ class DacteV3 extends Common
             $this->imp = $this->dom->getElementsByTagName("imp")->item(0);
             $this->cteSub = $this->dom->getElementsByTagName("infCteSub")->item(0);
             $vTrib = $this->pSimpleGetValue($this->imp, "vTotTrib");
-            $textoAdic = number_format(!is_numeric($vTrib) ? 0 : $vTrib, 2, ",", ".");
-            $this->textoAdic = "o valor aproximado de tributos incidentes sobre o preço deste serviço é de R$"
-                .$textoAdic;
+            $textoAdic = $this->dom->getElementsByTagName("compl")->item(0);
+
+            $this->textoAdic = $this->pSimpleGetValue($textoAdic, "xTexto");
             $this->toma4 = $this->dom->getElementsByTagName("toma4")->item(0);
             $this->toma03 = $this->dom->getElementsByTagName("toma3")->item(0);
             //Tag tomador é identificado por toma03 na versão 2.00
@@ -1235,7 +1235,7 @@ class DacteV3 extends Common
                 'size' => 6,
                 'style' => '');
             $this->pTextBox($x+5, $y+10, $w, 4, $texto, $aFont, 'T', 'L', 0, '');
-            $texto = 'Desenvolvido por '.$this->nomeDesenvolvedor . ' - '. $this->siteDesenvolvedor;
+            $texto = 'Emitido com o '.$this->nomeDesenvolvedor . ' - '. $this->siteDesenvolvedor;
             $aFont = array(
                 'font' => $this->fontePadrao,
                 'size' => 6,
@@ -1249,7 +1249,7 @@ class DacteV3 extends Common
                 'size' => 6,
                 'style' => '');
             $this->pTextBox($x+5, $y+10, $w, 4, $texto, $aFont, 'T', 'L', 0, '');
-            $texto = 'Desenvolvido por '.$this->nomeDesenvolvedor . ' - '. $this->siteDesenvolvedor;
+            $texto = 'Emitido com o '.$this->nomeDesenvolvedor . ' - '. $this->siteDesenvolvedor;
             $aFont = array(
                 'font' => $this->fontePadrao,
                 'size' => 6,
