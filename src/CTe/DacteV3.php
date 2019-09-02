@@ -19,6 +19,7 @@ use Exception;
 use NFePHP\DA\Legacy\Dom;
 use NFePHP\DA\Legacy\Pdf;
 use NFePHP\DA\Legacy\Common;
+use Com\Tecnick\Barcode\Barcode;
 
 class DacteV3 extends Common
 {
@@ -96,6 +97,7 @@ class DacteV3 extends Common
     protected $totPag;
     protected $idDocAntEle = [];
     protected $procCancCTe;
+    protected $qrCodCTe;
 
     protected $cteSub;
 
@@ -216,6 +218,9 @@ class DacteV3 extends Common
             if ($this->infCte->getAttribute("versao")=="2.00") {
                 $this->toma03 = $this->dom->getElementsByTagName("toma03")->item(0);
             }
+            //qrcode
+            $this->qrCodCTe = $this->dom->getElementsByTagName('qrCodCTe')->item(0) ?
+            $this->dom->getElementsByTagName('qrCodCTe')->item(0)->nodeValue : null;
             //modal aquaviário
             $this->aquav = $this->dom->getElementsByTagName("aquav")->item(0);
             $tomador = $this->pSimpleGetValue($this->toma03, "toma");
@@ -571,6 +576,28 @@ class DacteV3 extends Common
     } //fim função printDACTE
 
     /**
+     * pQRDACTE
+     * Esta função envia a gerar o qrcode para ser adcionado ao dacte.
+     * @param  string $qrCodMDFe conteudo do qrcode
+     * @return string retorna a base 64 do qrcode
+     */
+    protected function pQRDACTE($qrCodMDFe)
+    {
+        $barcode = new Barcode();
+        $bobj = $barcode->getBarcodeObj(
+            'QRCODE,M',
+            $qrCodMDFe,
+            -4,
+            -4,
+            'black',
+            array(-2, -2, -2, -2)
+        )->setBackgroundColor('white');
+        $qrcode = $bobj->getPngData();
+        // prepare a base64 encoded "data url"
+        return 'data://text/plain;base64,' . base64_encode($qrcode);
+    }
+
+    /**
      * zCabecalho
      * Monta o cabelhalho da DACTE ( retrato e paisagem )
      *
@@ -848,6 +875,7 @@ class DacteV3 extends Common
         $y += 12;
         $h = 9;
         $w = $w1 + $w2 + 2;
+        $wqr = 31.5;
         $this->pTextBox($x, $y, $w + 0.5, $h + 1);
         //modelo
         $wa = 9;
@@ -915,6 +943,7 @@ class DacteV3 extends Common
         $aFont = $this->formatNegrito;
         $this->pTextBox($xa, $y + 5, $wa, $h, $texto, $aFont, 'T', 'C', 0, '');
         $this->pdf->Line($xa + $wa, $y, $xa + $wa, $y + $h + 1);
+        $qrx = $xa + $wa;
         //ISUF
         $xa += $wa;
         $wa = 32;
@@ -927,26 +956,31 @@ class DacteV3 extends Common
             'size' => 7,
             'style' => 'B');
         $this->pTextBox($xa, $y + 5, $wa, $h, $texto, $aFont, 'T', 'C', 0, '');
+        $qrh = 0;
         //outra caixa
         $y += $h + 1;
         $h = 23;
         $h1 = 14;
-        $this->pTextBox($x, $y, $w + 0.5, $h1);
+        $this->pTextBox($x, $y, $w + 0.5 - $wqr, $h1);
+        $qrh = $qrh + $h1;
+        $qry = $y;
         //CODIGO DE BARRAS
         $chave_acesso = str_replace('CTe', '', $this->infCte->getAttribute("Id"));
-        $bW = 85;
+        $bW = 70;
         $bH = 10;
         //codigo de barras
         $this->pdf->SetFillColor(0, 0, 0);
-        $this->pdf->Code128($x + (($w - $bW) / 2), $y + 2, $chave_acesso, $bW, $bH);
-        $this->pTextBox($x, $y + $h1, $w + 0.5, $h1 - 6);
+        $this->pdf->Code128($x + (($w - $wqr - $bW) / 2), $y + 2, $chave_acesso, $bW, $bH);
+        $this->pTextBox($x, $y + $h1, $w + 0.5 - $wqr, $h1 - 6);
+        $qrh = $qrh + $h1 - 6;
         $texto = 'CHAVE DE ACESSO';
         $aFont = $this->formatPadrao;
-        $this->pTextBox($x, $y + $h1, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x, $y + $h1, $w - $wqr, $h, $texto, $aFont, 'T', 'L', 0, '');
         $aFont = $this->formatNegrito;
         $texto = $this->pFormat($chave_acesso, '##.####.##.###.###/####-##-##-###-###.###.###-###.###.###-#');
-        $this->pTextBox($x, $y + $h1 + 3, $w, $h, $texto, $aFont, 'T', 'C', 0, '');
-        $this->pTextBox($x, $y + $h1 + 8, $w + 0.5, $h1 - 4.5);
+        $this->pTextBox($x, $y + $h1 + 3, $w - $wqr, $h, $texto, $aFont, 'T', 'C', 0, '');
+        $this->pTextBox($x, $y + $h1 + 8, $w + 0.5 - $wqr, $h1 - 4.5);
+        $qrh = $qrh + $h1 - 4.5;
         $texto = "Consulta de autenticidade no portal nacional do CT-e, ";
         $texto .= "no site da Sefaz Autorizadora, \r\n ou em http://www.cte.fazenda.gov.br";
         if ($this->tpEmis == 5 || $this->tpEmis == 7 || $this->tpEmis == 8) {
@@ -954,10 +988,10 @@ class DacteV3 extends Common
             $this->pdf->SetFillColor(0, 0, 0);
             if ($this->tpEmis == 5) {
                 $chaveContingencia = $this->zGeraChaveAdicCont();
-                $this->pdf->Code128($x + 20, $y1 + 10, $chaveContingencia, $bW * .9, $bH / 2);
+                $this->pdf->Code128($x + (($w - $wqr - $bW) / 2) + 5, $y1 + 10, $chaveContingencia, $bW * .9, $bH / 2);
             } else {
                 $chaveContingencia = $this->pSimpleGetValue($this->protCTe, "nProt");
-                $this->pdf->Code128($x + 40, $y1 + 10, $chaveContingencia, $bW * .4, $bH / 2);
+                $this->pdf->Code128($x + $wqr - 5, $y1 + 10, $chaveContingencia, $bW * .4, $bH / 2);
             }
             //codigo de barras
         }
@@ -965,7 +999,7 @@ class DacteV3 extends Common
             'font' => $this->fontePadrao,
             'size' => 8,
             'style' => '');
-        $this->pTextBox($x, $y + $h1 + 9, $w, $h, $texto, $aFont, 'T', 'C', 0, '');
+        $this->pTextBox($x, $y + $h1 + 9, $w - $wqr, $h, $texto, $aFont, 'T', 'C', 0, '');
         //outra caixa
         $y += $h + 1;
         $h = 8.5;
@@ -1005,6 +1039,11 @@ class DacteV3 extends Common
         }
         $aFont = $this->formatNegrito;
         $this->pTextBox($x, $y + 12, $wa, $h, $texto, $aFont, 'T', 'C', 0, '');
+        //qrcode
+        if ($this->qrCodCTe) {
+            $this->pTextBox($qrx, $qry, $wqr, $qrh);
+            $this->pdf->image($this->pQRDACTE($this->qrCodCTe), $qrx + 1, $qry + 1, $wqr - 2, $qrh - 2, 'PNG');
+        }
         //CFOP
         $x = $oldX;
         $h = 8.5;

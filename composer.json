@@ -19,7 +19,7 @@
     ],
     "require": {
         "php" : ">= 7.0",
-        "tecnickcom/tc-lib-barcode": "^1.15"
+        "tecnickcom/tc-lib-barcode": "1.15"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^2.8",
