@@ -15,6 +15,8 @@ namespace NFePHP\DA\MDFe;
  * @author    Leandro C. Lopez <leandro dot castoldi at gmail dot com>
  */
 
+use DateTime;
+use Com\Tecnick\Barcode\Barcode;
 use NFePHP\DA\Legacy\Dom;
 use NFePHP\DA\Legacy\Common;
 use NFePHP\DA\Legacy\Pdf;
@@ -41,6 +43,10 @@ class Damdfe extends Common
     protected $wPrint; //largura imprimivel
     protected $hPrint; //comprimento imprimivel
     protected $formatoChave="#### #### #### #### #### #### #### #### #### #### ####";
+    protected $margemInterna = 2;
+    protected $hMaxLinha = 9;
+    protected $hBoxLinha = 6;
+    protected $hLinha = 3;
     //variaveis da carta de correção
     protected $id;
     protected $chMDFe;
@@ -54,6 +60,7 @@ class Damdfe extends Common
     protected $dhRegEvento;
     protected $nProt;
     protected $tpEmis;
+    protected $qrCodMDFe;
     //objetos
     private $dom;
     private $procEventoNFe;
@@ -190,6 +197,8 @@ class Damdfe extends Common
             '',
             $this->infMDFe->getAttribute("Id")
         );
+        $this->qrCodMDFe = $this->dom->getElementsByTagName('qrCodMDFe')->item(0) ?
+            $this->dom->getElementsByTagName('qrCodMDFe')->item(0)->nodeValue : null;
         if (is_object($this->mdfeProc)) {
             $this->nProt = ! empty($this->mdfeProc->getElementsByTagName("nProt")->item(0)->nodeValue) ?
                     $this->mdfeProc->getElementsByTagName("nProt")->item(0)->nodeValue : '';
@@ -330,7 +339,7 @@ class Damdfe extends Common
         $CEP = 'CEP: '.$this->pFormat($CEP, "##.###-###");
         $UF = 'UF: '.$this->UF;
         $mun = 'Municipio: '.$this->xMun;
-        
+
         $texto = $razao . "\n" . $cnpj . ' - ' . $ie . "\n";
         $texto .= $lgr . ' - ' . $nro . "\n";
         $texto .= $bairro . "\n";
@@ -372,7 +381,7 @@ class Damdfe extends Common
         $aFont = array('font'=>$this->fontePadrao, 'size'=>8, 'style'=>'I');
         $texto = 'PROTOCOLO DE AUTORIZACAO DE USO';
         $this->pTextBox($x, $y, $w, 8, $texto, $aFont, 'T', 'L', 0, '');
-        
+
         $aFont = array('font'=>$this->fontePadrao, 'size'=>10, 'style'=>'');
         if (is_object($this->mdfeProc)) {
             $tsHora = $this->pConvertTime($this->dhRecbto);
@@ -422,7 +431,7 @@ class Damdfe extends Common
         }
         return $y;
     }// fim headerMDFe
-    
+
     /**
      * headerMDFeRetrato
      *
@@ -441,7 +450,7 @@ class Damdfe extends Common
         $w = $maxW; //round($maxW*0.41, 0);// 80;
         $aFont = array('font'=>$this->fontePadrao, 'size'=>6, 'style'=>'I');
         $w1 = $w;
-        $h=20;
+        $h=30;
         $oldY += $h;
         $this->pTextBox($x, $y, $w, $h);
         if (is_file($this->logomarca)) {
@@ -480,9 +489,12 @@ class Damdfe extends Common
             }
             $this->pdf->Image($this->logomarca, $xImg, $yImg, $nImgW, $nImgH, 'jpeg');
         } else {
-            $x1 = $x+40;
+            $x1 = $x;
             $y1 = $y;
             $tw = $w;
+        }
+        if ($this->qrCodMDFe) {
+            $y = $this->pQRDANFE($x, $y1 + 1, 50);
         }
         $aFont = array('font'=>$this->fontePadrao, 'size'=>8, 'style'=>'');
         $razao = $this->xNome;
@@ -523,7 +535,7 @@ class Damdfe extends Common
         $this->pdf->SetFillColor(0, 0, 0);
         $this->pdf->Code128($x + 5, $y+2, $this->chMDFe, $maxW - 10, $bH);
         $this->pdf->SetFillColor(255, 255, 255);
-        $y = $y + 22;
+        $y = $y + 27;
         $this->pTextBox($x, $y, $maxW, 10);
         $aFont = array('font'=>$this->fontePadrao, 'size'=>8, 'style'=>'I');
         $tsHora = $this->pConvertTime($this->dhEvento);
@@ -584,9 +596,9 @@ class Damdfe extends Common
             }
             $this->pdf->SetTextColor(0, 0, 0);
         }
-        return $y+12;
+        return $y+17;
     }// fim headerMDFe
-    
+
     /**
      * bodyMDFe
      *
@@ -840,6 +852,44 @@ class Damdfe extends Common
         }
         return $altura + 7;
     }//fim bodyMDFe
+
+    protected function pQRDANFE($x = 0, $y = 0, $h = 0)
+    {
+        $margemInterna = $this->margemInterna;
+        $maxW = $this->wPrint;
+        $w = ($maxW * 1) + 4;
+        $hLinha = $this->hLinha;
+        $hBoxLinha = $this->hBoxLinha;
+        $aFontTit = array('font' => $this->fontePadrao, 'size' => 8, 'style' => 'B');
+        $aFontTex = array('font' => $this->fontePadrao, 'size' => 8, 'style' => '');
+        $dhRecbto = '';
+        $nProt = '';
+        if (isset($this->nfeProc)) {
+            $nProt = $this->getTagValue($this->nfeProc, "nProt");
+            $dhRecbto = $this->getTagValue($this->nfeProc, "dhRecbto");
+        }
+        $barcode = new Barcode();
+        $bobj = $barcode->getBarcodeObj(
+            'QRCODE,M',
+            $this->qrCodMDFe,
+            -4,
+            -4,
+            'black',
+            array(-2, -2, -2, -2)
+        )->setBackgroundColor('white');
+        $qrcode = $bobj->getPngData();
+        $wQr = 25;
+        $hQr = 25;
+        $yQr = ($y + $margemInterna);
+        $xQr = 170;
+        // prepare a base64 encoded "data url"
+        $pic = 'data://text/plain;base64,' . base64_encode($qrcode);
+        $info = getimagesize($pic);
+        $this->pdf->image($pic, $xQr, $yQr, $wQr, $hQr, 'PNG');
+        $dt = new DateTime($dhRecbto);
+        $yQr = ($yQr + $hQr + $margemInterna);
+    }
+
     /**
      * footerMDFe
      *
