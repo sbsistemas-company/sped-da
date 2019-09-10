@@ -91,6 +91,7 @@ class DacteV3 extends Common
     protected $aquav;
     protected $preVisualizar;
     protected $flagDocOrigContinuacao;
+    protected $flagObsContinuacao = false;
     protected $arrayNFe = array();
     protected $siteDesenvolvedor;
     protected $nomeDesenvolvedor;
@@ -464,30 +465,25 @@ class DacteV3 extends Common
             }
             $x = $xInic;
             $r = $this->zObs($x, $y);
-            $y = $y-10;
+            $y = $y+$r;
             switch ($this->modal) {
                 case '1':
-                    $y += 25.9;
                     $x = $xInic;
                     $r = $this->zModalRod($x, $y);
                     break;
                 case '2':
-                    $y += 25.9;
                     $x = $xInic;
                     $r = $this->zModalAereo($x, $y);
                     break;
                 case '3':
-                    $y += 17.9;
                     $x = $xInic;
                     $r = $this->zModalAquaviario($x, $y);
                     break;
                 case '4':
-                    $y += 17.9;
                     $x = $xInic;
                     $r = $this->zModalFerr($x, $y);
                     break;
                 case '5':
-                    $y += 17.9;
                     $x = $xInic;
                     // TODO fmertins 31/10/14: este método não existe...
                     $r = $this->zModalDutoviario($x, $y);
@@ -529,16 +525,30 @@ class DacteV3 extends Common
 
         //$y += 19;
         $y += 11;
-        $y = $this->zCanhoto($x, $y);
+        $r = $this->zCanhoto($x, $y);
+        $y += $r + 13;
 
         //coloca o rodapé da página
         if ($this->orientacao == 'P') {
-            $this->zRodape(2, $this->hPrint - 2);
+            $this->zRodape(2, $y);
         } else {
             $this->zRodape($xInic, $this->hPrint + 2.3);
         }
-        if ($this->flagDocOrigContinuacao == 1) {
-            $this->zdocOrigContinuacao(1, 71);
+        if($this->flagObsContinuacao || $this->flagDocOrigContinuacao == 1){
+            //var_dump($this->flagObsContinuacao, $this->flagDocOrigContinuacao);
+            $this->pdf->AddPage($this->orientacao, $this->papel);
+            $x = 7;
+            $y = 7;
+            $r = $this->zCabecalho($x, $y, 2, $this->totPag);
+            $y += $r + 28;
+            if($this->flagObsContinuacao) {
+                $r = $this->zObsContinuacao($x, $y);
+                $y += $r;
+            }
+            if ($this->flagDocOrigContinuacao == 1) {
+                $r = $this->zdocOrigContinuacao($x, $y);
+                $y += $r;
+            }
         }
         //retorna o ID na CTe
         if ($classPDF !== false) {
@@ -2336,7 +2346,7 @@ class DacteV3 extends Common
             $this->arrayNFe[] = $chaveNFe;
         }
         $qtdeNFe = 1;
-        if (count($this->arrayNFe) >15) {
+        if (count($this->arrayNFe) >16) {
             $this->flagDocOrigContinuacao = 1;
             $qtdeNFe = count($this->arrayNFe);
         }
@@ -2501,7 +2511,7 @@ class DacteV3 extends Common
         for ($i = 2; $i <= $this->totPag; $i++) {
             $x = $x2;
             $y = $y2;
-            $this->pdf->AddPage($this->orientacao, $this->papel);
+            //$this->pdf->AddPage($this->orientacao, $this->papel);
             //$r = $this->zCabecalho(1, 1, $i, $this->totPag);
             $oldX = $x;
             $oldY = $y;
@@ -2520,7 +2530,7 @@ class DacteV3 extends Common
             if (count($this->arrayNFe)%2 !=0) {
                 $h = $h+3.5;
             } // Caso tenha apenas 1 registro na ultima linha
-
+            $h += 0.4;
             $texto = 'DOCUMENTOS ORIGINÁRIOS - CONTINUACÃO';
             $aFont = $this->formatPadrao;
             $this->pTextBox($x, $y, $w, $h, $texto, $aFont, 'T', 'C', 1, '');
@@ -2529,7 +2539,7 @@ class DacteV3 extends Common
             $descr3 = 'SÉRIE/NRO. DOCUMENTO';
 
             $y += 3.4;
-            $this->pdf->Line($x, $y, $w + 1, $y);
+            $this->pdf->Line($x, $y, $w + 7, $y);
             $texto = $descr1;
             $aFont = $this->formatPadrao;
             $this->pTextBox($x, $y, $w * 0.10, $h, $texto, $aFont, 'T', 'L', 0, '');
@@ -2546,18 +2556,19 @@ class DacteV3 extends Common
             $this->pTextBox($x, $y, $w * 0.13, $h, $texto, $aFont, 'T', 'L', 0, '');
 
             $x += $w * 0.14;
+
             if ($this->modal == '1') {
                 if ($this->lota == 1) {
-                    $this->pdf->Line($x, $y, $x, $y + 31.5);
+                    $this->pdf->Line($x, $y, $x, $y + $h - 3.5);
                 } else {
-                    $this->pdf->Line($x, $y, $x, $y + 49.5);
+                    $this->pdf->Line($x, $y, $x, $y + $h - 3.5);
                 }
             } elseif ($this->modal == '2') {
-                $this->pdf->Line($x, $y, $x, $y + 49.5);
+                $this->pdf->Line($x, $y, $x, $y + $h - 3.5);
             } elseif ($this->modal == '3') {
-                $this->pdf->Line($x, $y, $x, $y + 34.1);
+                $this->pdf->Line($x, $y, $x, $y + $h - 3.5);
             } else {
-                $this->pdf->Line($x, $y, $x, $y + 21.5);
+                $this->pdf->Line($x, $y, $x, $y + $h - 3.5);
             }
             $texto = $descr1;
             $aFont = $this->formatPadrao;
@@ -2613,6 +2624,7 @@ class DacteV3 extends Common
                 $contador++;
             }
         }
+        return $h;
     } //fim da função zDocOrigContinuacao
 
     /**
@@ -2773,15 +2785,7 @@ class DacteV3 extends Common
             $maxW = $this->wPrint - $this->wCanhoto;
         }
         $w = $maxW;
-        //$h = 18;
-        $h = 14.8;
-        $texto = 'OBSERVAÇÕES';
-        $aFont = $this->formatPadrao;
-        $this->pTextBox($x, $y, $w, $h, $texto, $aFont, 'T', 'C', 1, '');
-        $y += 3.4;
-        $this->pdf->Line($x, $y, $w + 7, $y);
-        $auxX = $oldX;
-        $yIniDados = $y;
+
         $texto = '';
         foreach ($this->compl as $k => $d) {
             $xObs = $this->pSimpleGetValue($this->compl->item($k), "xObs");
@@ -2794,8 +2798,74 @@ class DacteV3 extends Common
             'font' => $this->fontePadrao,
             'size' => 7.5,
             'style' => '');
+
+        // altura dinamica
+        $h = 3.4 + (((strlen($texto) / 172) + substr_count($texto, "\n")) * 2);
+        if ($h < 16) {
+            $h = 16;
+        } else if ($h > 16) {
+            $this->flagObsContinuacao = true;
+            return 0;
+        }
+        $titulo = 'OBSERVAÇÕES';
+        $aFont = $this->formatPadrao;
+        $this->pTextBox($x, $y, $w, $h, $titulo, $aFont, 'T', 'C', 1, '');
+        $y += 3.4;
+        $this->pdf->Line($x, $y, $w + 7, $y);
+        // $auxX = $oldX;
+        // $yIniDados = $y;
+
         $this->pTextBox($x, $y, $w, $h, $textoObs[0], $aFont, 'T', 'L', 0, '', false);
         $this->pTextBox($x, $y+11.5, $w, $h, $textoObs[1], $aFont, 'T', 'L', 0, '', false);
+        return $h;
+    } //fim da função obsDACTE
+
+    /**
+     * zObsContinuacao
+     * Monta o campo com os dados do remetente na DACTE.
+     *
+     * @param  number $x Posição horizontal canto esquerdo
+     * @param  number $y Posição vertical canto superior
+     * @return number Posição vertical final
+     */
+    protected function zObsContinuacao($x = 0, $y = 0)
+    {
+        if ($this->orientacao == 'P') {
+            $maxW = $this->wPrint;
+        } else {
+            $maxW = $this->wPrint - $this->wCanhoto;
+        }
+        $w = $maxW;
+
+        $texto = '';
+        foreach ($this->compl as $k => $d) {
+            $xObs = $this->pSimpleGetValue($this->compl->item($k), "xObs");
+            $texto .= $xObs;
+        }
+        $textoObs = explode("Motorista:", $texto);
+        $textoObs[1] = isset($textoObs[1]) ? "Motorista: ".$textoObs[1]: '';
+        $texto .= $this->pSimpleGetValue($this->imp, "infAdFisco", "\r\n");
+        $aFont = array(
+            'font' => $this->fontePadrao,
+            'size' => 7.5,
+            'style' => '');
+
+        // altura dinamica
+        $h = 3.4 + (((strlen($texto) / 172) + substr_count($texto, "\n") + 1) * 2);
+        if ($h < 16) {
+            $h = 16;
+        }
+        $titulo = 'OBSERVAÇÕES';
+        $aFont = $this->formatPadrao;
+        $this->pTextBox($x, $y, $w, $h, $titulo, $aFont, 'T', 'C', 1, '');
+        $y += 3.4;
+        $this->pdf->Line($x, $y, $w + 7, $y);
+        // $auxX = $oldX;
+        // $yIniDados = $y;
+
+        $this->pTextBox($x, $y, $w, $h, $textoObs[0], $aFont, 'T', 'L', 0, '', false);
+        $this->pTextBox($x, $y+11.5, $w, $h, $textoObs[1], $aFont, 'T', 'L', 0, '', false);
+        return $h;
     } //fim da função obsDACTE
 
     /**
