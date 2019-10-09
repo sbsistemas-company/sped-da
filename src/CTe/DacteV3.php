@@ -2346,7 +2346,7 @@ class DacteV3 extends Common
             $this->arrayNFe[] = $chaveNFe;
         }
         $qtdeNFe = 1;
-        if (count($this->arrayNFe) >16) {
+        if (count($this->arrayNFe) > 15) {
             $this->flagDocOrigContinuacao = 1;
             $qtdeNFe = count($this->arrayNFe);
         }
