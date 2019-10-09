@@ -2507,7 +2507,7 @@ class DacteV3 extends Common
     {
         $x2 = $x;
         $y2 = $y;
-        $contador = 16;
+        $contador = 15;
         for ($i = 2; $i <= $this->totPag; $i++) {
             $x = $x2;
             $y = $y2;
@@ -2526,7 +2526,7 @@ class DacteV3 extends Common
             //$h = 6 + 3; // de altura do texto (primeira linha
             //$h = 9 + 3.5 ;// segunda linha
             //$h = 9 + 3.5+ 3.5 ;// segunda linha
-            $h = (( ( count($this->arrayNFe)/2 ) - 9) * 3.5)+9;
+            $h = (( ( count($this->arrayNFe)/2 ) - 9) * 3.5) + 13;
             if (count($this->arrayNFe)%2 !=0) {
                 $h = $h+3.5;
             } // Caso tenha apenas 1 registro na ultima linha
