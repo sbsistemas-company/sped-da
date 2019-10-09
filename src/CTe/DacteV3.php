@@ -2508,6 +2508,7 @@ class DacteV3 extends Common
         $x2 = $x;
         $y2 = $y;
         $contador = 15;
+        $h = $y;
         for ($i = 2; $i <= $this->totPag; $i++) {
             $x = $x2;
             $y = $y2;
