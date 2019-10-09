@@ -2346,7 +2346,7 @@ class DacteV3 extends Common
             $this->arrayNFe[] = $chaveNFe;
         }
         $qtdeNFe = 1;
-        if (count($this->arrayNFe) > 15) {
+        if (count($this->arrayNFe) > 16) {
             $this->flagDocOrigContinuacao = 1;
             $qtdeNFe = count($this->arrayNFe);
         }
@@ -2391,7 +2391,7 @@ class DacteV3 extends Common
         //$r = $this->zCabecalho(1, 1, '1', $this->totPag);
         $contador = 0;
         while ($contador < count($this->arrayNFe)) {
-            if ($contador == 15) {
+            if ($contador == 16) {
                 break;
             }
             $tp = 'NF-e';
@@ -2507,8 +2507,9 @@ class DacteV3 extends Common
     {
         $x2 = $x;
         $y2 = $y;
-        $contador = 15;
+        $contador = 16;
         $h = $y;
+
         for ($i = 2; $i <= $this->totPag; $i++) {
             $x = $x2;
             $y = $y2;
