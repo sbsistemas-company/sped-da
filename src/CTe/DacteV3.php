@@ -2513,8 +2513,13 @@ class DacteV3 extends Common
         for ($i = 2; $i <= $this->totPag; $i++) {
             $x = $x2;
             $y = $y2;
-            //$this->pdf->AddPage($this->orientacao, $this->papel);
-            //$r = $this->zCabecalho(1, 1, $i, $this->totPag);
+
+            if ($i > 2) {
+                $this->pdf->AddPage($this->orientacao, $this->papel);
+                $r = $this->zCabecalho(7, 7, $i, $this->totPag);
+                $y = $r + 35;
+            }
+
             $oldX = $x;
             $oldY = $y;
             if ($this->orientacao == 'P') {
