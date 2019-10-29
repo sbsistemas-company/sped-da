@@ -1884,7 +1884,7 @@ class DacteV3 extends Common
             if(!empty($qCarga)){
                 $texto =
                     $this->pSimpleGetValue($this->infQ->item(2),"tpMed")."\r\n"
-                    .number_format($qCarga, 3,",",".").' - '.$this->zUnidade($this->pSimpleGetValue($this->infQ->item(1), "cUnid"));
+                    .number_format($qCarga, 3,",",".").' - '.$this->zUnidade($this->pSimpleGetValue($this->infQ->item(2), "cUnid"));
             }
 
             $aFont = array(
