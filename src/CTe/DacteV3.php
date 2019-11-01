@@ -2694,7 +2694,7 @@ class DacteV3 extends Common
 
         if ($this->cteSub != null){
 
-            if($this->cteSub->getElementsByTagName('chCte')->item(0)->length && $this->cteSub->getElementsByTagName('chCte')->item(0)->nodeValue){
+            if($this->cteSub->getElementsByTagName('chCte')->length && $this->cteSub->getElementsByTagName('chCte')->item(0)->nodeValue){
                 $texto = $this->cteSub->getElementsByTagName('chCte')->item(0)->nodeValue;
                 $aFont = array(
                     'font' => $this->fontePadrao,
@@ -2710,7 +2710,7 @@ class DacteV3 extends Common
                 $yIniDados += 3.5;
             }
 
-            if($this->cteSub->getElementsByTagName('refCteAnu')->item(0)->length && $this->cteSub->getElementsByTagName('refCteAnu')->item(0)->nodeValue){
+            if($this->cteSub->getElementsByTagName('refCteAnu')->length && $this->cteSub->getElementsByTagName('refCteAnu')->item(0)->nodeValue){
                 $texto = $this->cteSub->getElementsByTagName('refCteAnu')->item(0)->nodeValue;
                 $aFont = array(
                     'font' => $this->fontePadrao,
