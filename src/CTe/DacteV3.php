@@ -2533,7 +2533,11 @@ class DacteV3 extends Common
             //$h = 6 + 3; // de altura do texto (primeira linha
             //$h = 9 + 3.5 ;// segunda linha
             //$h = 9 + 3.5+ 3.5 ;// segunda linha
-            $h = (( ( count($this->arrayNFe)/2 ) - 9) * 3.5) + 13;
+            if ($this->totPag > 2) {
+                $h = 290 - $y;
+            } else {
+                $h = (( (( count($this->arrayNFe)/2 )) - 9) * 3.5) + 13;
+            }
             if (count($this->arrayNFe)%2 !=0) {
                 $h = $h+3.5;
             } // Caso tenha apenas 1 registro na ultima linha
