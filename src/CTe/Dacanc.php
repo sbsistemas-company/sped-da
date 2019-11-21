@@ -40,7 +40,7 @@ class Dacanc extends Common
     protected $wPrint;
     protected $hPrint;
     protected $wCanhoto;
-    protected $formatoChave = "#### #### #### #### #### #### #### #### #### #### ####";
+    protected $pFormatoChave = "#### #### #### #### #### #### #### #### #### #### ####";
     protected $id;
     protected $chCTe;
     protected $tpAmb;
@@ -55,7 +55,7 @@ class Dacanc extends Common
     private $dom;
     private $infCanc;
     private $retCancCte;
-    
+
    /**
     *__construct
     * @param string $docXML Arquivo XML da cce
@@ -118,8 +118,10 @@ class Dacanc extends Common
         }
         $this->dom = new Dom();
         $this->dom->loadXML($docXML);
-        $this->infCanc = $this->dom->getElementsByTagName("infCanc")->item(0);
-        $this->retCancCTe = $this->dom->getElementsByTagName("retCancCTe")->item(0);
+
+        $this->infCanc = $this->dom->getElementsByTagName("eventoCTe")->item(0);
+        $this->infCanc = $this->infCanc->getElementsByTagName("infEvento")->item(0);
+        $this->retCancCTe = $this->dom->getElementsByTagName("infEvento")->item(1);
         if (empty($this->infCanc) && empty($this->retCancCTe)) {
             $this->errMsg = 'Um protocolo de cancelamento de CTe deve ser passado !!';
             $this->errStatus = true;
@@ -130,13 +132,13 @@ class Dacanc extends Common
         $this->aEnd['CNPJ']=substr($this->chCTe, 6, 14);
         $this->tpAmb = $this->infCanc->getElementsByTagName("tpAmb")->item(0)->nodeValue;
         $this->xJust = $this->infCanc->getElementsByTagName("xJust")->item(0)->nodeValue;
-        $this->dhEvento = $this->retCancCTe->getElementsByTagName("dhRecbto")->item(0)->nodeValue;
+        $this->dhEvento = $this->infCanc->getElementsByTagName("dhEvento")->item(0)->nodeValue;
         $this->cStat = $this->retCancCTe->getElementsByTagName("cStat")->item(0)->nodeValue;
         $this->xMotivo = $this->retCancCTe->getElementsByTagName("xMotivo")->item(0)->nodeValue;
-        $this->dhRegEvento = $this->retCancCTe->getElementsByTagName("dhRecbto")->item(0)->nodeValue;
+        $this->dhRegEvento = $this->retCancCTe->getElementsByTagName("dhRegEvento")->item(0)->nodeValue;
         $this->nProt = $this->retCancCTe->getElementsByTagName("nProt")->item(0)->nodeValue;
     }
-    
+
     /**
      * monta
      * @param type $orientacao
@@ -148,7 +150,7 @@ class Dacanc extends Common
     {
         return $this->montaDaCanccte($orientacao, $papel, $logoAlign, $classPDF);
     }
-    
+
     /**
      * printDocument
      * @param type $nome
@@ -160,7 +162,7 @@ class Dacanc extends Common
     {
         return $this->printDaCanccte($nome, $destino, $printer);
     }
-    
+
     /**
      * montaDACCE
      * Esta função monta a DACCE conforme as informações fornecidas para a classe
@@ -185,12 +187,12 @@ class Dacanc extends Common
             $this->pdf = new Pdf($this->orientacao, 'mm', $this->papel);
         }
         if ($this->orientacao == 'P') {
-            $margSup = 2;
-            $margEsq = 2;
-            $margDir = 2;
+            $margSup = 7;
+            $margEsq = 7;
+            $margDir = 7;
             // posição inicial do relatorio
-            $xInic = 1;
-            $yInic = 1;
+            $xInic = 7;
+            $yInic = 7;
             if ($this->papel =='A4') {
                 $maxW = 210;
                 $maxH = 297;
@@ -241,7 +243,7 @@ class Dacanc extends Common
             return $this->id;
         }
     }
-    
+
     /**
      * header
      * @param type $x
@@ -265,9 +267,9 @@ class Dacanc extends Common
         $w1 = $w;
         $h=32;
         $oldY += $h;
-        $this->textBox($x, $y, $w, $h);
+        $this->pTextBox($x, $y, $w, $h);
         $texto = 'IDENTIFICAÇÃO DO EMITENTE';
-        $this->textBox($x, $y, $w, 5, $texto, $aFont, 'T', 'C', 0, '');
+        $this->pTextBox($x, $y, $w, 5, $texto, $aFont, 'T', 'C', 0, '');
         if (is_file($this->logomarca)) {
             $logoInfo = getimagesize($this->logomarca);
             //largura da imagem em mm
@@ -311,7 +313,7 @@ class Dacanc extends Common
         //Nome emitente
         $aFont = array('font'=>$this->fontePadrao,'size'=>12,'style'=>'B');
         $texto = (isset($this->aEnd['razao'])?$this->aEnd['razao']:'');
-        $this->textBox($x1, $y1, $tw, 8, $texto, $aFont, 'T', 'C', 0, '');
+        $this->pTextBox($x1, $y1, $tw, 8, $texto, $aFont, 'T', 'C', 0, '');
         //endereço
         $y1 = $y1+6;
         $aFont = array('font'=>$this->fontePadrao,'size'=>8,'style'=>'');
@@ -320,7 +322,7 @@ class Dacanc extends Common
         $cpl = (isset($this->aEnd['complemento'])?$this->aEnd['complemento']:'');
         $bairro = (isset($this->aEnd['bairro'])?$this->aEnd['bairro']:'');
         $CEP = (isset($this->aEnd['CEP'])?$this->aEnd['CEP']:'');
-        $CEP = $this->format($CEP, "#####-###");
+        $CEP = $this->pFormat($CEP, "#####-###");
         $mun = (isset($this->aEnd['municipio'])?$this->aEnd['municipio']:'');
         $UF = (isset($this->aEnd['UF'])?$this->aEnd['UF']:'');
         $fone = (isset($this->aEnd['telefone'])?$this->aEnd['telefone']:'');
@@ -348,40 +350,40 @@ class Dacanc extends Common
         $texto .= ($texto!='' && $tmp_txt!=''?"\n":'').$tmp_txt;
         $tmp_txt=$email;
         $texto .= ($texto!='' && $tmp_txt!=''?"\n":'').$tmp_txt;
-        $this->textBox($x1, $y1-2, $tw, 8, $texto, $aFont, 'T', 'C', 0, '');
+        $this->pTextBox($x1, $y1-2, $tw, 8, $texto, $aFont, 'T', 'C', 0, '');
         //##################################################
         $w2 = round($maxW - $w, 0);
         $x += $w;
-        $this->textBox($x, $y, $w2, $h);
+        $this->pTextBox($x, $y, $w2, $h);
         $y1 = $y + $h;
         $aFont = array('font'=>$this->fontePadrao,'size'=>16,'style'=>'B');
-        $this->textBox($x, $y+2, $w2, 8, 'Representação Gráfica de ProtCancCTe', $aFont, 'T', 'C', 0, '');
+        $this->pTextBox($x, $y+2, $w2, 8, 'Representação Gráfica de ProtCancCTe', $aFont, 'T', 'C', 0, '');
         $aFont = array('font'=>$this->fontePadrao,'size'=>12,'style'=>'I');
-        $this->textBox($x, $y+7, $w2, 8, '(Protocolo Cancelamento de CTe)', $aFont, 'T', 'C', 0, '');
-        $tsHora = $this->convertTime($this->dhEvento);
+        $this->pTextBox($x, $y+7, $w2, 8, '(Protocolo Cancelamento de CTe)', $aFont, 'T', 'C', 0, '');
+        $tsHora = $this->pConvertTime($this->dhEvento);
         $texto = 'Criado em : '. date('d/m/Y   H:i:s', $tsHora);
-        $this->textBox($x, $y+20, $w2, 8, $texto, $aFont, 'T', 'L', 0, '');
-        $tsHora = $this->convertTime($this->dhRegEvento);
+        $this->pTextBox($x, $y+20, $w2, 8, $texto, $aFont, 'T', 'L', 0, '');
+        $tsHora = $this->pConvertTime($this->dhRegEvento);
         $texto = 'Prococolo: '.$this->nProt.'  -  Registrado na SEFAZ em: '.date('d/m/Y   H:i:s', $tsHora);
-        $this->textBox($x, $y+25, $w2, 8, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x, $y+25, $w2, 8, $texto, $aFont, 'T', 'L', 0, '');
         //####################################################
         $x = $oldX;
-        $this->textBox($x, $y1, $maxW, 33);
+        $this->pTextBox($x, $y1, $maxW, 33);
         $sY = $y1+23;
         $texto = 'De acordo com as determinações legais vigentes, vimos por meio desta '
                 . 'comunicar-lhe que o Conhecimento de Transporte Eletrônico, abaixo '
-                . 'referenciada, encontra-se cancelada, solicitamos que sejam aplicadas '
+                . 'referenciado, encontra-se cancelado, solicitamos que sejam aplicadas '
                 . 'essas correções ao executar seus lançamentos fiscais.';
         $aFont = array('font'=>$this->fontePadrao,'size'=>10,'style'=>'');
-        $this->textBox($x+5, $y1, $maxW-5, 20, $texto, $aFont, 'T', 'L', 0, '', false);
+        $this->pTextBox($x+2, $y1, $maxW-5, 20, $texto, $aFont, 'T', 'L', 0, '', false);
         //############################################
         $x = $oldX;
         $y = $y1;
         $numNF = substr($this->chCTe, 25, 9);
         $serie = substr($this->chCTe, 22, 3);
-        $numNF = $this->format($numNF, "###.###.###");
+        $numNF = $this->pFormat($numNF, "###.###.###");
         $texto = "Conhecimento: " . $numNF .'  -   Série: '.$serie;
-        $this->textBox($x+2, $y+11, $w2, 8, $texto, $aFont, 'T', 'L', 0, '');
+        $this->pTextBox($x+2, $y+11, $w2, 8, $texto, $aFont, 'T', 'L', 0, '');
         $bW = 87;
         $bH = 15;
         $x = 55;
@@ -392,8 +394,8 @@ class Dacanc extends Common
         $this->pdf->setFillColor(255, 255, 255);
         $y1 = $y+2+$bH;
         $aFont = array('font'=>$this->fontePadrao,'size'=>10,'style'=>'');
-        $texto = $this->format($this->chCTe, $this->formatoChave);
-        $this->textBox($x, $y1, $w-2, $h, $texto, $aFont, 'T', 'C', 0, '');
+        $texto = $this->pFormat($this->chCTe, $this->pFormatoChave);
+        $this->pTextBox($x, $y1, $w-2, $h, $texto, $aFont, 'T', 'C', 0, '');
         $retVal = $sY;
         //indicar sem valor
         if ($this->tpAmb != 1) {
@@ -408,15 +410,15 @@ class Dacanc extends Common
             $this->pdf->setTextColor(90, 90, 90);
             $texto = "SEM VALOR FISCAL";
             $aFont = array('font'=>$this->fontePadrao,'size'=>48,'style'=>'B');
-            $this->textBox($x, $y, $w, $h, $texto, $aFont, 'C', 'C', 0, '');
+            $this->pTextBox($x, $y, $w+14, $h, $texto, $aFont, 'C', 'C', 0, '');
             $aFont = array('font'=>$this->fontePadrao,'size'=>30,'style'=>'B');
             $texto = "AMBIENTE DE HOMOLOGAÇÃO";
-            $this->textBox($x, $y+14, $w, $h, $texto, $aFont, 'C', 'C', 0, '');
+            $this->pTextBox($x, $y+14, $w+14, $h, $texto, $aFont, 'C', 'C', 0, '');
             $this->pdf->setTextColor(0, 0, 0);
         }
         return $retVal;
     }
-    
+
     /**
      * body
      * @param int $x
@@ -427,14 +429,14 @@ class Dacanc extends Common
         $maxW = $this->wPrint;
         $texto = 'JUSTIFICATIVA DO CANCELAMENTO';
         $aFont = array('font'=>$this->fontePadrao,'size'=>10,'style'=>'B');
-        $this->textBox($x, $y, $maxW, 5, $texto, $aFont, 'T', 'L', 0, '', false);
+        $this->pTextBox($x, $y, $maxW, 5, $texto, $aFont, 'T', 'L', 0, '', false);
         $y += 5;
-        $this->textBox($x, $y, $maxW, 210);
+        $this->pTextBox($x, $y, $maxW, 195);
         $texto = $this->xJust;
         $aFont = array('font'=>$this->fontePadrao,'size'=>12,'style'=>'B');
-        $this->textBox($x+2, $y+2, $maxW-2, 150, $texto, $aFont, 'T', 'L', 0, '', false);
+        $this->pTextBox($x+2, $y+2, $maxW-2, 150, $texto, $aFont, 'T', 'L', 0, '', false);
     }
-    
+
     /**
      * footer
      * @param type $x
@@ -450,19 +452,17 @@ class Dacanc extends Common
                 . " em arquivo eletrônico XML e pode ser consultada através dos"
                 . " Portais das SEFAZ.";
         $aFont = array('font'=>$this->fontePadrao,'size'=>10,'style'=>'I');
-        $this->textBox($x, $y, $w, 20, $texto, $aFont, 'T', 'C', 0, '', false);
+        $this->pTextBox($x, $y, $w, 20, $texto, $aFont, 'T', 'C', 0, '', false);
         $y = $this->hPrint -4;
         $texto = "Impresso em  ". date('d/m/Y   H:i:s');
         $w = $this->wPrint-4;
         $aFont = array('font'=>$this->fontePadrao,'size'=>6,'style'=>'I');
-        $this->textBox($x, $y, $w, 4, $texto, $aFont, 'T', 'L', 0, '');
-        $texto = "DaCanccteNFePHP ver. "
-            . $this->version
-            .  "  Powered by NFePHP (GNU/GPLv3 GNU/LGPLv3) © www.nfephp.org";
+        $this->pTextBox($x, $y, $w, 4, $texto, $aFont, 'T', 'L', 0, '');
+        $texto = "Simples CT-e - https://simplescte.com.br/";
         $aFont = array('font'=>$this->fontePadrao,'size'=>6,'style'=>'I');
-        $this->textBox($x, $y, $w, 4, $texto, $aFont, 'T', 'R', 0, 'http://www.nfephp.org');
+        $this->pTextBox($x, $y, $w+4, 4, $texto, $aFont, 'T', 'R', 0, 'http://www.nfephp.org');
     }
-    
+
     /**
      * print
      * @param type $nome
