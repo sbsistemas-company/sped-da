@@ -86,8 +86,8 @@ class Dacce extends Common
         $sDirPDF = '',
         $fontePDF = '',
         $mododebug = 0,
-        $nomeDesenvolvedor = 'Dacce ver. 0.1.1 Powered by NFePHP (GNU/GPLv3 GNU/LGPLv3) © www.nfephp.org',
-        $siteDesenvolvedor = 'http://www.nfephp.org'
+        $nomeDesenvolvedor = 'SimplesCTe',
+        $siteDesenvolvedor = 'https://www.simplescte.com.br'
     ) {
         if (is_numeric($mododebug)) {
             $this->debugMode = (int) $mododebug;
@@ -180,12 +180,12 @@ class Dacce extends Common
         $this->pdf = new Pdf($this->orientacao, 'mm', $this->papel);
         if ($this->orientacao == 'P') {
             // margens do PDF
-            $margSup = 2;
-            $margEsq = 2;
-            $margDir = 2;
+            $margSup = 7;
+            $margEsq = 7;
+            $margDir = 7;
             // posição inicial do relatorio
-            $xInic = 1;
-            $yInic = 1;
+            $xInic = 7;
+            $yInic = 7;
             if ($this->papel == 'A4') { // A4 210x297mm
                 $maxW = 210;
                 $maxH = 297;
@@ -229,7 +229,7 @@ class Dacce extends Common
         // coloca os dados da CCe
         $y = $this->pBody($x, $y + 15);
         // coloca o rodapé
-        $y = $this->pFooter($x, $y + $this->hPrint - 20);
+        $y = $this->pFooter($x, $y + $this->hPrint - 9);
         //retorna o ID na CTe
     }
 
@@ -358,7 +358,7 @@ class Dacce extends Common
         $this->pTextBox($x, $y1, $maxW, 40);
         $sY = $y1 + 40;
         $texto = 'De acordo com as determinações legais vigentes, vimos por meio desta comunicar-lhe'.
-            ' que o Conhecimento, abaixo referenciada, contêm irregularidades que estão destacadas e' .
+            ' que o Conhecimento, abaixo referenciado, contêm irregularidades que estão destacadas e' .
             ' suas respectivas correções, solicitamos que sejam aplicadas essas correções ao executar'.
             ' seus lançamentos fiscais.';
         $aFont = array(
@@ -437,7 +437,7 @@ class Dacce extends Common
         );
         $this->pTextBox($x, $y, $maxW, 5, $texto, $aFont, 'T', 'L', 0, '', false);
         $y += 5;
-        $this->pTextBox($x, $y, $maxW, $maxH);
+        $this->pTextBox($x, $y, $maxW, $maxH - 7);
 
 
          $aFont = array(
@@ -445,6 +445,7 @@ class Dacce extends Common
             'size' => 9,
             'style' => 'B'
         );
+        $x = 0;
         $this->pTextBox($x, $y, $maxW = ($maxW/5), 5, "Grupo", $aFont, 'T', 'C', 0, '', false);
         $this->pTextBox($x = $maxW, $y, $maxW, 5, "Campo", $aFont, 'T', 'C', 0, '', false);
         $this->pTextBox($x = ($maxW*2), $y, $maxW, 5, "Número", $aFont, 'T', 'C', 0, '', false);
@@ -530,9 +531,9 @@ class Dacce extends Common
             'style' => 'I'
         );
         $this->pTextBox($x, $y, $w, 20, $texto, $aFont, 'T', 'C', 0, '', false);
-        $y = $this->hPrint - 4;
+        $y = $this->hPrint + 3;
         $texto = "Impresso em  " . date('d/m/Y   H:i:s');
-        $w = $this->wPrint - 4;
+        $w = $this->wPrint + 3;
         $aFont = array(
             'font' => $this->fontePadrao,
             'size' => 6,
@@ -540,14 +541,13 @@ class Dacce extends Common
         );
         $this->pTextBox($x, $y, $w, 4, $texto, $aFont, 'T', 'L', 0, '');
 
-        $texto = "Dacce ver. " . $this->version . " - Desenvolvido por "
-            . $this->nomeDesenvolvedor . " - " . $this->siteDesenvolvedor;
+        $texto = "Emitido com o ". $this->nomeDesenvolvedor . " - " . $this->siteDesenvolvedor;
         $aFont = array(
             'font' => $this->fontePadrao,
             'size' => 6,
             'style' => 'I'
         );
-        $this->pTextBox($x, $y, $w, 4, $texto, $aFont, 'T', 'R', 0, 'http://www.nfephp.org');
+        $this->pTextBox($x-3, $y, $w, 4, $texto, $aFont, 'T', 'R', 0, 'https://www.simplescte.com.br');
     }
 
     /**
