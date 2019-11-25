@@ -458,7 +458,7 @@ class Dacanc extends Common
         $w = $this->wPrint-4;
         $aFont = array('font'=>$this->fontePadrao,'size'=>6,'style'=>'I');
         $this->pTextBox($x, $y, $w, 4, $texto, $aFont, 'T', 'L', 0, '');
-        $texto = "Simples CT-e - https://simplescte.com.br/";
+        $texto = "Emitido com o Simples CT-e - https://simplescte.com.br/";
         $aFont = array('font'=>$this->fontePadrao,'size'=>6,'style'=>'I');
         $this->pTextBox($x, $y, $w+4, 4, $texto, $aFont, 'T', 'R', 0, 'http://www.nfephp.org');
     }
