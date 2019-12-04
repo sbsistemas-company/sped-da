@@ -23,7 +23,7 @@ use NFePHP\DA\Legacy\Common;
 class Daevento extends Common
 {
     public $chNFe;
-    
+
     protected $logoAlign = 'C';
     protected $yDados = 0;
     protected $debugMode = 0;
@@ -57,7 +57,7 @@ class Daevento extends Common
     protected $dhRegEvento;
     protected $nProt;
     protected $tpEvento;
-    
+
     private $dom;
     private $procEventoNFe;
     private $evento;
@@ -175,7 +175,7 @@ class Daevento extends Common
      */
     public function monta($orientacao = '', $papel = 'A4', $logoAlign = 'C', $classe_pdf = false)
     {
-        return $this->montaDaEventoNFe($orientacao, $papel, $logoAlign, $situacao_externa, $classe_pdf);
+        return $this->montaDaEventoNFe($orientacao, $papel, $logoAlign, $classe_pdf);
     }
 
     /**
