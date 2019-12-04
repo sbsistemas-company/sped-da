@@ -125,7 +125,7 @@ class DacteV3 extends Common
         $fonteDACTE = '',
         $mododebug = 2,
         $preVisualizar = false,
-        $nomeDesenvolvedor = 'Simples CT-e',
+        $nomeDesenvolvedor = 'SimplesCTe',
         $siteDesenvolvedor = 'https://simplescte.com.br/'
     ) {
         if (is_numeric($mododebug)) {

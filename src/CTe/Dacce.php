@@ -528,7 +528,7 @@ class Dacce extends Common
         $aFont = array(
             'font' => $this->fontePadrao,
             'size' => 10,
-            'style' => 'I'
+            'style' => ''
         );
         $this->pTextBox($x, $y, $w, 20, $texto, $aFont, 'T', 'C', 0, '', false);
         $y = $this->hPrint + 3;
@@ -547,7 +547,7 @@ class Dacce extends Common
             'size' => 6,
             'style' => 'I'
         );
-        $this->pTextBox($x-3, $y, $w, 4, $texto, $aFont, 'T', 'R', 0, 'https://www.simplescte.com.br');
+        $this->pTextBox($x-3, $y, $w, 4, $texto, $aFont, 'T', 'R', 0, $this->siteDesenvolvedor);
     }
 
     /**
