@@ -396,7 +396,7 @@ class Danfe extends Common
     {
         $this->creditos = trim($message);
     }
-    
+
     /**
      * monta
      *
@@ -733,8 +733,8 @@ class Danfe extends Common
         $y = $this->pCabecalhoDANFE($x, $y, $pag, $totPag);
         //coloca os dados do destinatário
         $y = $this->pDestinatarioDANFE($x, $y+1);
-        
-        
+
+
         //Verifica as formas de pagamento da nota fiscal
         $formaPag = array();
         if (isset($this->detPag) && $this->detPag->length > 0) {
@@ -1907,7 +1907,7 @@ class Danfe extends Common
             return ($y-2);
         }
     } //fim da função pagamentoDANFE
-    
+
     /**
      * impostoDanfeHelper
      * Auxilia a montagem dos campos de impostos e totais da DANFE
@@ -3079,7 +3079,7 @@ class Danfe extends Common
         $aFont = array('font'=>$this->fontePadrao, 'size'=>6, 'style'=>'I');
         $texto = "Impresso em ". date('d/m/Y') . " as " . date('H:i:s');
         $this->pTextBox($x, $y, $w, 0, $texto, $aFont, 'T', 'L', false);
-        $texto = $this->creditos .  "  Powered by NFePHP";
+        $texto = $this->creditos;
         $this->pTextBox($x, $y, $w, 0, $texto, $aFont, 'T', 'R', false, '');
     }
 
@@ -3378,7 +3378,7 @@ class Danfe extends Common
         }
         return $saida;
     }
-    
+
     private function imagePNGtoJPG($original)
     {
         $image = imagecreatefrompng($original);
