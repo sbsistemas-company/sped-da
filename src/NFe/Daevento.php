@@ -199,6 +199,7 @@ class Daevento extends Common
         $this->orientacao = $orientacao;
         $this->papel = $papel;
         $this->logoAlign = $logoAlign;
+
         if ($classe_pdf !== false) {
             $this->pdf = $classe_pdf;
         } else {
