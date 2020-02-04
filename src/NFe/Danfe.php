@@ -80,6 +80,11 @@ class Danfe extends Common
      * @var boolean
      */
     public $descProdQuebraLinha = true;
+    /**
+     * Parâmetro para pré visualizar a DANFE.
+     * @var boolean
+     */
+    public $preVisualizar = false;
 
     //###########################################################
     //PROPRIEDADES DA CLASSE
@@ -325,7 +330,8 @@ class Danfe extends Common
         $sDestino = 'I',
         $sDirPDF = '',
         $fonteDANFE = '',
-        $mododebug = 2
+        $mododebug = 2,
+        $preVisualizar = false
     ) {
         //set_time_limit(1800);
         if (is_numeric($mododebug)) {
@@ -348,6 +354,7 @@ class Danfe extends Common
         $this->logomarca    = $sPathLogo;
         $this->destino      = $sDestino;
         $this->pdfDir       = $sDirPDF;
+        $this->preVisualizar= $preVisualizar;
         // verifica se foi passa a fonte a ser usada
         if (empty($fonteDANFE)) {
             $this->fontePadrao = 'Times';
@@ -1387,7 +1394,7 @@ class Danfe extends Common
             $this->pdf->SetTextColor(0, 0, 0);
         }
         //indicar sem valor
-        if ($tpAmb != 1) {
+        if ($tpAmb != 1 && !$this->preVisualizar) {
             $x = 10;
             if ($this->orientacao == 'P') {
                 $y = round($this->hPrint*2/3, 0);
@@ -1404,6 +1411,33 @@ class Danfe extends Common
             $texto = "AMBIENTE DE HOMOLOGAÇÃO";
             $this->pTextBox($x, $y+14, $w, $h, $texto, $aFont, 'C', 'C', 0, '');
             $this->pdf->SetTextColor(0, 0, 0);
+        } else if ($this->preVisualizar) { // caso seja uma DA de Pré-Visualização
+            $h = 5;
+            $w = $maxW - (2 * 10);
+            $x = -20;
+            $y = 190;
+            $this->pdf->SetTextColor(255, 100, 100);
+            $aFont = array(
+                'font' => $this->fontePadrao,
+                'size' => 40,
+                'style' => 'B');
+            $texto = "Pré-visualização";
+            $this->pTextBox($x+35, $y, $w, $h, $texto, $aFont, 'C', 'C', 0, '');
+            $this->pdf->SetTextColor(255, 100, 100);
+            $aFont = array(
+                'font' => $this->fontePadrao,
+                'size' => 41,
+                'style' => 'B');
+            $texto = "Sem Validade Jurídica";
+            $this->pTextBox($x+40, $y+15, $w, $h, $texto, $aFont, 'C', 'C', 0, '');
+            $this->pdf->SetTextColor(90, 90, 90);
+            $texto = "SEM VALOR FISCAL";
+            $aFont = array(
+                'font' => $this->fontePadrao,
+                'size' => 48,
+                'style' => 'B');
+            $this->pTextBox($x+40, $y+30, $w, $h, $texto, $aFont, 'C', 'C', 0, '');
+            $this->pdf->SetTextColor(0, 0, 0); // voltar a cor default
         } else {
             $x = 10;
             if ($this->orientacao == 'P') {
