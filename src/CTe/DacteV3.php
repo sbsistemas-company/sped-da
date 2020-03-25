@@ -2173,8 +2173,6 @@ class DacteV3 extends Common
             $texto = number_format($this->pSimpleGetValue($this->ICMS, "vICMS"), 2, ",", ".");
         } else if (!empty($this->ICMS->getElementsByTagName("vICMSOutraUF")->item(0)->nodeValue)){
             $texto = number_format($this->pSimpleGetValue($this->ICMS, "vICMSOutraUF"), 2, ",", ".");
-        } else if (!empty($this->ICMS->getElementsByTagName("vICMSSTRet")->item(0)->nodeValue)){
-            $texto = number_format($this->pSimpleGetValue($this->ICMS, "vICMSSTRet"), 2, ",", ".");
         }
             
         $aFont = $this->formatNegrito;
