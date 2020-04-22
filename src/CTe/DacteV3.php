@@ -2931,7 +2931,7 @@ class DacteV3 extends Common
 
         $texto = 'ESTE CONHECIMENTO DE TRANSPORTE ATENDE À LEGISLAÇÃO DE TRANSPORTE RODOVIÁRIO EM VIGOR';
         $aFont = $this->formatPadrao;
-        $this->pTextBox($x-20, $y + 3, $w * 0.50, $h, $texto, $aFont, 'T', 'C', 0, '');
+        $this->pTextBox($x, $y + 3, $w * 0.50, $h, $texto, $aFont, 'T', 'C', 0, '');
     } //fim da função zModalRod
 
     /**
