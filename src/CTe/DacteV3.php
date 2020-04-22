@@ -2174,7 +2174,7 @@ class DacteV3 extends Common
         } else if (!empty($this->ICMS->getElementsByTagName("vICMSOutraUF")->item(0)->nodeValue)){
             $texto = number_format($this->pSimpleGetValue($this->ICMS, "vICMSOutraUF"), 2, ",", ".");
         }
-            
+
         $aFont = $this->formatNegrito;
         $this->pTextBox($x, $y, $w * $wCol02, $h, $texto, $aFont, 'T', 'L', 0, '');
         $x += $w * $wCol02;
@@ -2919,15 +2919,15 @@ class DacteV3 extends Common
         }
         $y += 3.4;
         $this->pdf->Line($x, $y, $w + 7, $y); // LINHA DE CIMA
-        $texto = 'RNTRC DA EMPRESA';
-        $aFont = $this->formatPadrao;
-        $this->pTextBox($x, $y, $w * 0.23, $h, $texto, $aFont, 'T', 'L', 0, '');
-        $texto = $this->pSimpleGetValue($this->rodo, "RNTRC");
-        $aFont = $this->formatNegrito;
-        $this->pTextBox($x, $y + 3, $w * 0.23, $h, $texto, $aFont, 'T', 'L', 0, '');
-        $x += $w * 0.23;
+        // $texto = 'RNTRC DA EMPRESA';
+        // $aFont = $this->formatPadrao;
+        // $this->pTextBox($x, $y, $w * 0.23, $h, $texto, $aFont, 'T', 'L', 0, '');
+        // $texto = $this->pSimpleGetValue($this->rodo, "RNTRC");
+        // $aFont = $this->formatNegrito;
+        // $this->pTextBox($x, $y + 3, $w * 0.23, $h, $texto, $aFont, 'T', 'L', 0, '');
+        // $x += $w * 0.23;
 
-        $this->pdf->Line($x-20, $y, $x-20, $y + 6.1); // LINHA A FRENTE DA RNTRC DA EMPRESA
+        // $this->pdf->Line($x-20, $y, $x-20, $y + 6.1); // LINHA A FRENTE DA RNTRC DA EMPRESA
 
         $texto = 'ESTE CONHECIMENTO DE TRANSPORTE ATENDE À LEGISLAÇÃO DE TRANSPORTE RODOVIÁRIO EM VIGOR';
         $aFont = $this->formatPadrao;
