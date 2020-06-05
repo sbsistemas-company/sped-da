@@ -2140,29 +2140,41 @@ class DacteV3 extends Common
         $this->pTextBox($x, $y, $w * 0.26, $h, $texto, $aFont, 'T', 'L', 0, '');
         $x += $w * 0.26;
 
-        $texto = !empty($this->ICMS->getElementsByTagName("vBC")->item(0)->nodeValue) ?
-            number_format($this->pSimpleGetValue($this->ICMS, "vBC"), 2, ",", ".") : (
-            !empty($this->ICMS->getElementsByTagName("vBCOutraUF")->item(0)->nodeValue) ?
-                number_format($this->pSimpleGetValue($this->ICMS, "vBCOutraUF"), 2, ",", ".") : ''
-            );
+        $texto = '';
+        if (!empty($this->ICMS->getElementsByTagName("vBC")->item(0)->nodeValue)) {
+            $texto = number_format($this->pSimpleGetValue($this->ICMS, "vBC"), 2, ",", ".");
+        } else if (!empty($this->ICMS->getElementsByTagName("vBCOutraUF")->item(0)->nodeValue)){
+            $texto = number_format($this->pSimpleGetValue($this->ICMS, "vBCOutraUF"), 2, ",", ".");
+        } else if (!empty($this->ICMS->getElementsByTagName("vBCSTRet")->item(0)->nodeValue)){
+            $texto = number_format($this->pSimpleGetValue($this->ICMS, "vBCSTRet"), 2, ",", ".");
+        }
+
         $aFont = $this->formatNegrito;
         $this->pTextBox($x, $y, $w * $wCol02, $h, $texto, $aFont, 'T', 'L', 0, '');
         $x += $w * $wCol02;
 
-        $texto = !empty($this->ICMS->getElementsByTagName("pICMS")->item(0)->nodeValue) ?
-            number_format($this->pSimpleGetValue($this->ICMS, "pICMS"), 2, ",", ".") : (
-            !empty($this->ICMS->getElementsByTagName("pICMSOutraUF")->item(0)->nodeValue) ?
-                number_format($this->pSimpleGetValue($this->ICMS, "pICMSOutraUF"), 2, ",", ".") : ''
-            );
+        $texto = '';
+
+        if (!empty($this->ICMS->getElementsByTagName("pICMS")->item(0)->nodeValue)){
+            $texto = number_format($this->pSimpleGetValue($this->ICMS, "pICMS"), 2, ",", ".");
+        } else if (!empty($this->ICMS->getElementsByTagName("pICMSOutraUF")->item(0)->nodeValue)){
+            $texto = number_format($this->pSimpleGetValue($this->ICMS, "pICMSOutraUF"), 2, ",", ".");
+        } else if (!empty($this->ICMS->getElementsByTagName("pICMSSTRet")->item(0)->nodeValue)){
+            $texto = number_format($this->pSimpleGetValue($this->ICMS, "pICMSSTRet"), 2, ",", ".");
+        }
+
         $aFont = $this->formatNegrito;
         $this->pTextBox($x, $y, $w * $wCol02, $h, $texto, $aFont, 'T', 'L', 0, '');
         $x += $w * $wCol02;
 
-        $texto = !empty($this->ICMS->getElementsByTagName("vICMS")->item(0)->nodeValue) ?
-            number_format($this->pSimpleGetValue($this->ICMS, "vICMS"), 2, ",", ".") : (
-            !empty($this->ICMS->getElementsByTagName("vICMSOutraUF")->item(0)->nodeValue) ?
-                number_format($this->pSimpleGetValue($this->ICMS, "vICMSOutraUF"), 2, ",", ".") : ''
-            );
+        $texto = '';
+
+        if (!empty($this->ICMS->getElementsByTagName("vICMS")->item(0)->nodeValue)){
+            $texto = number_format($this->pSimpleGetValue($this->ICMS, "vICMS"), 2, ",", ".");
+        } else if (!empty($this->ICMS->getElementsByTagName("vICMSOutraUF")->item(0)->nodeValue)){
+            $texto = number_format($this->pSimpleGetValue($this->ICMS, "vICMSOutraUF"), 2, ",", ".");
+        }
+
         $aFont = $this->formatNegrito;
         $this->pTextBox($x, $y, $w * $wCol02, $h, $texto, $aFont, 'T', 'L', 0, '');
         $x += $w * $wCol02;
@@ -2907,19 +2919,19 @@ class DacteV3 extends Common
         }
         $y += 3.4;
         $this->pdf->Line($x, $y, $w + 7, $y); // LINHA DE CIMA
-        $texto = 'RNTRC DA EMPRESA';
-        $aFont = $this->formatPadrao;
-        $this->pTextBox($x, $y, $w * 0.23, $h, $texto, $aFont, 'T', 'L', 0, '');
-        $texto = $this->pSimpleGetValue($this->rodo, "RNTRC");
-        $aFont = $this->formatNegrito;
-        $this->pTextBox($x, $y + 3, $w * 0.23, $h, $texto, $aFont, 'T', 'L', 0, '');
-        $x += $w * 0.23;
+        // $texto = 'RNTRC DA EMPRESA';
+        // $aFont = $this->formatPadrao;
+        // $this->pTextBox($x, $y, $w * 0.23, $h, $texto, $aFont, 'T', 'L', 0, '');
+        // $texto = $this->pSimpleGetValue($this->rodo, "RNTRC");
+        // $aFont = $this->formatNegrito;
+        // $this->pTextBox($x, $y + 3, $w * 0.23, $h, $texto, $aFont, 'T', 'L', 0, '');
+        // $x += $w * 0.23;
 
-        $this->pdf->Line($x-20, $y, $x-20, $y + 6.1); // LINHA A FRENTE DA RNTRC DA EMPRESA
+        // $this->pdf->Line($x-20, $y, $x-20, $y + 6.1); // LINHA A FRENTE DA RNTRC DA EMPRESA
 
         $texto = 'ESTE CONHECIMENTO DE TRANSPORTE ATENDE À LEGISLAÇÃO DE TRANSPORTE RODOVIÁRIO EM VIGOR';
         $aFont = $this->formatPadrao;
-        $this->pTextBox($x-20, $y + 3, $w * 0.50, $h, $texto, $aFont, 'T', 'C', 0, '');
+        $this->pTextBox($x, $y + 3, $w * 0.50, $h, $texto, $aFont, 'T', 'C', 0, '');
     } //fim da função zModalRod
 
     /**
