@@ -502,7 +502,7 @@ class Damdfe extends Common
         $aFont = array('font'=>$this->fontePadrao, 'size'=>8, 'style'=>'');
         $razao = $this->xNome;
         $cnpj = 'CNPJ: '.$this->pFormat($this->CNPJ, "###.###.###/####-##");
-        $ie = 'IE: '.$this->pFormat($this->IE, '###/#######');
+        $ie = 'IE: '.$this->IE;
         $lgr = 'Logradouro: '.$this->xLgr;
         $nro = 'Nº: '.$this->nro;
         $bairro = 'Bairro: '.$this->xBairro;
