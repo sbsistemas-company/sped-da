@@ -3702,10 +3702,14 @@ class DacteV3 extends Common
             $fone = !empty($field->getElementsByTagName("fone")->item(0)->nodeValue) ?
                 $field->getElementsByTagName("fone")->item(0)->nodeValue : '';
             $foneLen = strlen($fone);
-            if ($foneLen > 0) {
+            if ($foneLen > 0 && $foneLen < 11) {
                 $fone2 = substr($fone, 0, $foneLen - 4);
                 $fone1 = substr($fone, 0, $foneLen - 8);
                 $fone = '(' . $fone1 . ') ' . substr($fone2, -4) . '-' . substr($fone, -4);
+            } else if ($foneLen > 10) {
+                $fone2 = substr($fone, 0, $foneLen - 4);
+                $fone1 = substr($fone, 0, $foneLen - 9);
+                $fone = '(' . $fone1 . ') ' . substr($fone2, -5) . '-' . substr($fone, -4);
             } else {
                 $fone = '';
             }
