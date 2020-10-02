@@ -152,7 +152,11 @@ class Damdfe extends Common
         $this->xBairro = $this->dom->getElementsByTagName("xBairro")->item(0)->nodeValue;
         $this->UF = $this->dom->getElementsByTagName("UF")->item(0)->nodeValue;
         $this->xMun = $this->dom->getElementsByTagName("xMun")->item(0)->nodeValue;
-        $this->CEP = $this->dom->getElementsByTagName("CEP")->item(0)->nodeValue;
+
+        if ($this->dom->getElementsByTagName("CEP")->length > 0){
+            $this->CEP = $this->dom->getElementsByTagName("CEP")->item(0)->nodeValue;
+        }
+
         $this->ide = $this->dom->getElementsByTagName("ide")->item(0);
         $this->tpAmb = $this->dom->getElementsByTagName("tpAmb")->item(0)->nodeValue;
         $this->mod = $this->dom->getElementsByTagName("mod")->item(0)->nodeValue;
@@ -338,8 +342,13 @@ class Damdfe extends Common
         $lgr = 'Logradouro: '.$this->xLgr;
         $nro = 'Nº: '.$this->nro;
         $bairro = 'Bairro: '.$this->xBairro;
-        $CEP = $this->CEP;
-        $CEP = 'CEP: '.$this->pFormat($CEP, "##.###-###");
+        
+        if ($this->CEP){
+            $CEP = $this->CEP;
+            $CEP = 'CEP: '.$this->pFormat($CEP, "##.###-###");
+        } else {
+            $CEP = '';
+        }
         $UF = 'UF: '.$this->UF;
         $mun = 'Municipio: '.$this->xMun;
 
@@ -506,8 +515,14 @@ class Damdfe extends Common
         $lgr = 'Logradouro: '.$this->xLgr;
         $nro = 'Nº: '.$this->nro;
         $bairro = 'Bairro: '.$this->xBairro;
-        $CEP = $this->CEP;
-        $CEP = 'CEP: '.$this->pFormat($CEP, "##.###-###");
+
+        if ($this->CEP){
+            $CEP = $this->CEP;
+            $CEP = 'CEP: '.$this->pFormat($CEP, "##.###-###");
+        } else {
+            $CEP = '';
+        }
+
         $mun = 'Municipio: '.$this->xMun;
         $UF = 'UF: '.$this->UF;
         $texto = $razao . "\n" . $cnpj . ' - ' . $ie . "\n";
