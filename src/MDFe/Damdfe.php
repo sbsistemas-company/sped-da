@@ -516,7 +516,7 @@ class Damdfe extends Common
         $nro = 'Nº: '.$this->nro;
         $bairro = 'Bairro: '.$this->xBairro;
 
-        if ($this->CEP){
+        if (isset($this->CEP) && $this->CEP){
             $CEP = $this->CEP;
             $CEP = 'CEP: '.$this->pFormat($CEP, "##.###-###");
         } else {
