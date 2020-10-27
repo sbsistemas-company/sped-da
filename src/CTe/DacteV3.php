@@ -2863,8 +2863,7 @@ class DacteV3 extends Common
             $xObs = $this->pSimpleGetValue($this->compl->item($k), "xObs");
             $texto .= $xObs;
         }
-        $textoObs = explode("Motorista:", $texto);
-        $textoObs[1] = isset($textoObs[1]) ? "Motorista: ".$textoObs[1]: '';
+
         $texto .= $this->pSimpleGetValue($this->imp, "infAdFisco", "\r\n");
         $aFont = array(
             'font' => $this->fontePadrao,
@@ -2881,11 +2880,8 @@ class DacteV3 extends Common
         $this->pTextBox($x, $y, $w, $h, $titulo, $aFont, 'T', 'C', 1, '');
         $y += 3.4;
         $this->pdf->Line($x, $y, $w + 7, $y);
-        // $auxX = $oldX;
-        // $yIniDados = $y;
 
-        $this->pTextBox($x, $y, $w, $h, $textoObs[0], $aFont, 'T', 'L', 0, '', false);
-        $this->pTextBox($x, $y+11.5, $w, $h, $textoObs[1], $aFont, 'T', 'L', 0, '', false);
+        $this->pTextBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 0, '', false);
         return $h;
     } //fim da função obsDACTE
 
