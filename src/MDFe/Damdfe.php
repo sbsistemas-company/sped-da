@@ -728,6 +728,18 @@ class Damdfe extends Common
         $texto = number_format($this->qCarga, 2, ', ', '.');
         $aFont = array('font'=>$this->fontePadrao, 'size'=>10, 'style'=>'');
         $this->pTextBox($x1, $y+4, $x2, 10, $texto, $aFont, 'T', 'C', 0, '', false);
+
+        if ($this->ciot){
+            $x1 += $x2;
+            $this->pTextBox($x1, $y, $x2 * 3, 12);
+            $texto = 'CIOT';
+            $aFont = array('font'=>$this->fontePadrao, 'size'=>8, 'style'=>'');
+            $this->pTextBox($x1, $y, $x2, 8, $texto, $aFont, 'T', 'L', 0, '', false);
+            $texto = $this->ciot;
+            $aFont = array('font'=>$this->fontePadrao, 'size'=>10, 'style'=>'');
+            $this->pTextBox($x1, $y+4, $x2, 10, $texto, $aFont, 'T', 'L', 0, '', false);
+        }
+        
         $x1 = $x;
         $y += 12;
         $yold = $y;
