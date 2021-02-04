@@ -203,6 +203,7 @@ class DacteV3 extends Common
             $this->infNF = $this->dom->getElementsByTagName("infNF");
             $this->infNFe = $this->dom->getElementsByTagName("infNFe");
             $this->infOutros = $this->dom->getElementsByTagName("infOutros");
+			$this->idDocAntEle = $this->dom->getElementsByTagName("idDocAntEle");
             $this->compl = $this->dom->getElementsByTagName("compl");
             $this->ICMS = $this->dom->getElementsByTagName("ICMS")->item(0);
             $this->ICMSSN = $this->dom->getElementsByTagName("ICMSSN")->item(0);
@@ -2477,7 +2478,7 @@ class DacteV3 extends Common
         }
         foreach ($this->idDocAntEle as $k => $d) {
             $tp = 'CT-e';
-            $chaveCTe = $this->idDocAntEle->item($k)->getElementsByTagName('chave')->item(0)->nodeValue;
+            $chaveCTe = $this->idDocAntEle->item($k)->getElementsByTagName('chCTe')->item(0)->nodeValue;
             $numCTe = substr($chaveCTe, 25, 9);
             $serieCTe = substr($chaveCTe, 22, 3);
             $doc = $serieCTe . '/' . $numCTe;
