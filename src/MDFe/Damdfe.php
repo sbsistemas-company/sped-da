@@ -212,6 +212,7 @@ class Damdfe extends Common
             $this->dhRecbto = $this->mdfeProc->getElementsByTagName("dhRecbto")->item(0)->nodeValue;
         }
         $this->seg = $this->dom->getElementsByTagName("seg");
+
     }//fim construct
     /**
      *buildMDFe
@@ -219,6 +220,7 @@ class Damdfe extends Common
      */
     public function buildMDFe()
     {
+
         $this->pdf = new Pdf($this->orientacao, 'mm', $this->papel);
         if ($this->orientacao == 'P') {
             // margens do PDF
@@ -915,7 +917,7 @@ class Damdfe extends Common
             }
         }
         if ($averbado) {
-            if (count($seguros) <= 2 ){
+            if (count($seguros) <= 2) {
                 $y += 35;
                 $texto = 'Seguro da Carga';
                 $aFont = array('font'=>$this->fontePadrao, 'size'=>8, 'style'=>'B');
@@ -956,10 +958,9 @@ class Damdfe extends Common
 
                 $y = $altura + 10 + $y1;
             } else {
-                foreach ($seguros as $seguro){
-                    $this->xuxoObs."$seguro->nAverb,";
-                }
-
+                foreach($seguros as $seguro)
+                    $this->xuxoObs .= $seguro->nAverb.", ";
+                $y = $altura + 7;
             }
         } else {
             $y = $altura + 7;
@@ -1056,14 +1057,17 @@ class Damdfe extends Common
      */
     private function footerMDFe($x, $y)
     {
+
         $maxW = $this->wPrint;
         $x2 = $maxW;
         $this->pTextBox($x, $y, $x2, 30);
         $texto = 'Observação
         '.$this->infCpl;
 
+
         if ($this->xuxoObs != '') {
-            $texto.'nro Averbações: '.$this->xuxoObs;
+            $texto.= 'nro Averbações: ';
+            $texto.=$this->xuxoObs;
         }
 
         $aFont = array('font'=>$this->fontePadrao, 'size'=>8, 'style'=>'');
