@@ -35,6 +35,7 @@ class Damdfe extends Common
     protected $errStatus=false;// status de erro TRUE um erro ocorreu false sem erros
     protected $orientacao='P'; //orientação da DANFE P-Retrato ou L-Paisagem
     protected $papel='A4'; //formato do papel
+    private $xuxoObs = ''; // Xuxo para muitas averbações.
     //destivo do arquivo pdf I-borwser, S-retorna o arquivo, D-força download, F-salva em arquivo local
     protected $destino = 'I';
     protected $pdfDir=''; //diretorio para salvar o pdf com a opção de destino = F
@@ -342,7 +343,7 @@ class Damdfe extends Common
         $lgr = 'Logradouro: '.$this->xLgr;
         $nro = 'Nº: '.$this->nro;
         $bairro = 'Bairro: '.$this->xBairro;
-        
+
         if (isset($this->CEP) && $this->CEP){
             $CEP = $this->CEP;
             $CEP = 'CEP: '.$this->pFormat($CEP, "##.###-###");
@@ -739,7 +740,7 @@ class Damdfe extends Common
             $aFont = array('font'=>$this->fontePadrao, 'size'=>10, 'style'=>'');
             $this->pTextBox($x1, $y+4, $x2, 10, $texto, $aFont, 'T', 'L', 0, '', false);
         }
-        
+
         $x1 = $x;
         $y += 12;
         $yold = $y;
@@ -883,30 +884,35 @@ class Damdfe extends Common
 
         $averbado = false;
         $seguros = [];
+        $len = $this->seg->item($i)->getElementsByTagName('nAver')->length;
         for ($i = 0; $i < $this->seg->length; $i++) {
-            for ($j = 0; $j < $this->seg->item($i)->getElementsByTagName('nAver')->length; $j++) {
+            for ($j = 0; $j < $len; $j++) {
                 if (strlen($this->seg->item($i)->getElementsByTagName('nAver')->item($j)->nodeValue) == 40) {
-                    $averbado = true;
-                    $seguro = new \stdClass();
-                    if ($this->seg->item($i)->getElementsByTagName('respSeg')->item(0)->nodeValue == 1) {
-                        $seguro->respSeg = 'Emitente do MDF-e';
-                    } else {
-                        if (isset($this->seg->item($i)->getElementsByTagName('CNPJ')->item(0)->nodeValue)) {
-                            $seguro->respSeg = $this->seg->item($i)->getElementsByTagName('CNPJ')->item(0)->nodeValue;
-                        } else if (isset($this->seg->item($i)->getElementsByTagName('CPF')->item(0)->nodeValue)) {
-                            $seguro->respSeg = $this->seg->item($i)->getElementsByTagName('CPF')->item(0)->nodeValue;
+                    if ($len < 2) {
+                        $averbado = true;
+                        $seguro = new \stdClass();
+                        if ($this->seg->item($i)->getElementsByTagName('respSeg')->item(0)->nodeValue == 1) {
+                            $seguro->respSeg = 'Emitente do MDF-e';
+                        } else {
+                            if (isset($this->seg->item($i)->getElementsByTagName('CNPJ')->item(0)->nodeValue)) {
+                                $seguro->respSeg = $this->seg->item($i)->getElementsByTagName('CNPJ')->item(0)->nodeValue;
+                            } else if (isset($this->seg->item($i)->getElementsByTagName('CPF')->item(0)->nodeValue)) {
+                                $seguro->respSeg = $this->seg->item($i)->getElementsByTagName('CPF')->item(0)->nodeValue;
+                            }
                         }
+
+                        if (isset($this->seg->item($i)->getElementsByTagName('xSeg')->item(0)->nodeValue)) {
+                            $seguro->xSeg = $this->seg->item($i)->getElementsByTagName('xSeg')->item(0)->nodeValue;
+                        }
+
+                        $seguro->nApol = $this->seg->item($i)->getElementsByTagName('nApol')->item(0)->nodeValue;
+                        $seguro->nAverb = $this->seg->item($i)->getElementsByTagName('nAver')->item($j)->nodeValue;
+
+                        $seguros[] = $seguro;
+                    } else {
+                        $nAver = $this->seg->item($i)->getElementsByTagName('nAver')->item($j)->nodeValue;
+                        $this->xuxoObs .= "$nAver, ";
                     }
-
-                    if (isset($this->seg->item($i)->getElementsByTagName('xSeg')->item(0)->nodeValue)){
-                        $seguro->xSeg = $this->seg->item($i)->getElementsByTagName('xSeg')->item(0)->nodeValue;
-                    }
-
-                    $seguro->nApol = $this->seg->item($i)->getElementsByTagName('nApol')->item(0)->nodeValue;
-                    $seguro->nAverb = $this->seg->item($i)->getElementsByTagName('nAver')->item($j)->nodeValue;
-
-                    $seguros[] = $seguro;
-
                 } else {
                     continue;
                 }
@@ -1052,6 +1058,11 @@ class Damdfe extends Common
         $this->pTextBox($x, $y, $x2, 30);
         $texto = 'Observação
         '.$this->infCpl;
+
+        if ($this->xuxoObs != '') {
+            $texto.'nro Averbações: '.$this->xuxoObs;
+        }
+
         $aFont = array('font'=>$this->fontePadrao, 'size'=>8, 'style'=>'');
         $this->pTextBox($x, $y, $x2, 8, $texto, $aFont, 'T', 'L', 0, '', false);
         $y = $this->hPrint -4;
