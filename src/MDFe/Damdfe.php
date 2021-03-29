@@ -888,76 +888,79 @@ class Damdfe extends Common
         for ($i = 0; $i < $this->seg->length; $i++) {
             for ($j = 0; $j < $len; $j++) {
                 if (strlen($this->seg->item($i)->getElementsByTagName('nAver')->item($j)->nodeValue) == 40) {
-                    if ($len < 2) {
-                        $averbado = true;
-                        $seguro = new \stdClass();
-                        if ($this->seg->item($i)->getElementsByTagName('respSeg')->item(0)->nodeValue == 1) {
-                            $seguro->respSeg = 'Emitente do MDF-e';
-                        } else {
-                            if (isset($this->seg->item($i)->getElementsByTagName('CNPJ')->item(0)->nodeValue)) {
-                                $seguro->respSeg = $this->seg->item($i)->getElementsByTagName('CNPJ')->item(0)->nodeValue;
-                            } else if (isset($this->seg->item($i)->getElementsByTagName('CPF')->item(0)->nodeValue)) {
-                                $seguro->respSeg = $this->seg->item($i)->getElementsByTagName('CPF')->item(0)->nodeValue;
-                            }
-                        }
 
-                        if (isset($this->seg->item($i)->getElementsByTagName('xSeg')->item(0)->nodeValue)) {
-                            $seguro->xSeg = $this->seg->item($i)->getElementsByTagName('xSeg')->item(0)->nodeValue;
-                        }
-
-                        $seguro->nApol = $this->seg->item($i)->getElementsByTagName('nApol')->item(0)->nodeValue;
-                        $seguro->nAverb = $this->seg->item($i)->getElementsByTagName('nAver')->item($j)->nodeValue;
-
-                        $seguros[] = $seguro;
+                    $averbado = true;
+                    $seguro = new \stdClass();
+                    if ($this->seg->item($i)->getElementsByTagName('respSeg')->item(0)->nodeValue == 1) {
+                        $seguro->respSeg = 'Emitente do MDF-e';
                     } else {
-                        $nAver = $this->seg->item($i)->getElementsByTagName('nAver')->item($j)->nodeValue;
-                        $this->xuxoObs .= "$nAver, ";
+                        if (isset($this->seg->item($i)->getElementsByTagName('CNPJ')->item(0)->nodeValue)) {
+                            $seguro->respSeg = $this->seg->item($i)->getElementsByTagName('CNPJ')->item(0)->nodeValue;
+                        } else if (isset($this->seg->item($i)->getElementsByTagName('CPF')->item(0)->nodeValue)) {
+                            $seguro->respSeg = $this->seg->item($i)->getElementsByTagName('CPF')->item(0)->nodeValue;
+                        }
                     }
+
+                    if (isset($this->seg->item($i)->getElementsByTagName('xSeg')->item(0)->nodeValue)) {
+                        $seguro->xSeg = $this->seg->item($i)->getElementsByTagName('xSeg')->item(0)->nodeValue;
+                    }
+
+                    $seguro->nApol = $this->seg->item($i)->getElementsByTagName('nApol')->item(0)->nodeValue;
+                    $seguro->nAverb = $this->seg->item($i)->getElementsByTagName('nAver')->item($j)->nodeValue;
+
+                    $seguros[] = $seguro;
                 } else {
                     continue;
                 }
             }
         }
         if ($averbado) {
-            $y += 35;
-            $texto = 'Seguro da Carga';
-            $aFont = array('font'=>$this->fontePadrao, 'size'=>8, 'style'=>'B');
-            $this->pTextBox($x, $y, $maxW, 8, $texto, $aFont, 'T', 'C', 0, '', false);
-            $y1 = count($seguros) * 4 + 16;
-            $this->pTextBox($x, $y, $maxW, $y1);
-            $yAux = $y + 4;
-            $lineEnd = $maxW + 7;
-            $this->pdf->Line($x, $yAux, $lineEnd, $yAux);
+            if (count($seguros) <= 2 ){
+                $y += 35;
+                $texto = 'Seguro da Carga';
+                $aFont = array('font'=>$this->fontePadrao, 'size'=>8, 'style'=>'B');
+                $this->pTextBox($x, $y, $maxW, 8, $texto, $aFont, 'T', 'C', 0, '', false);
+                $y1 = count($seguros) * 4 + 16;
+                $this->pTextBox($x, $y, $maxW, $y1);
+                $yAux = $y + 4;
+                $lineEnd = $maxW + 7;
+                $this->pdf->Line($x, $yAux, $lineEnd, $yAux);
 
-            $aFont = array('font'=>$this->fontePadrao, 'size'=>8, 'style'=>'');
+                $aFont = array('font'=>$this->fontePadrao, 'size'=>8, 'style'=>'');
 
-            $texto = 'Responsável';
-            $this->pTextBox($x, $yAux, $maxW * .20 , 4, $texto, $aFont, 'T', 'L', 0, '', false);
-            $this->pdf->Line($maxW * .20, $yAux, $maxW * .20, $y1+ $y);
-            $texto = 'Seguradora';
-            $this->pTextBox($maxW * .20, $yAux, $maxW * .45 , 4, $texto, $aFont, 'T', 'L', 0, '', false);
-            $this->pdf->Line($maxW * .45, $yAux, $maxW * .45, $y1+ $y);
-            $texto = 'Apólice';
-            $this->pTextBox($maxW * .45, $yAux, $maxW * .70 , 4, $texto, $aFont, 'T', 'L', 0, '', false);
-            $this->pdf->Line($maxW * .70, $yAux, $maxW * .70, $y1+ $y);
-            $texto = 'Averbação';
-            $this->pTextBox($maxW * .70, $yAux, $maxW, 4, $texto, $aFont, 'T', 'L', 0, '', false);
-            $yAux += 4;
-            $this->pdf->Line($x, $yAux, $lineEnd, $yAux);
-
-            foreach($seguros as $seguro) {
-                $texto = $seguro->respSeg;
-                $this->pTextBox($x + 1, $yAux, $maxW * .20 , 4, $texto, $aFont, 'T', 'L', 0, '', false);
-                $texto = $seguro->xSeg;
-                $this->pTextBox($maxW * .20 + 1, $yAux, $maxW * .45 , 4, $texto, $aFont, 'T', 'L', 0, '', false);
-                $texto = $seguro->nApol;
-                $this->pTextBox($maxW * .45 + 1, $yAux, $maxW * .70 , 4, $texto, $aFont, 'T', 'L', 0, '', false);
-                $texto = $seguro->nAverb;
-                $this->pTextBox($maxW * .70 + 1, $yAux, $maxW, 4, $texto, $aFont, 'T', 'L', 0, '', false);
+                $texto = 'Responsável';
+                $this->pTextBox($x, $yAux, $maxW * .20 , 4, $texto, $aFont, 'T', 'L', 0, '', false);
+                $this->pdf->Line($maxW * .20, $yAux, $maxW * .20, $y1+ $y);
+                $texto = 'Seguradora';
+                $this->pTextBox($maxW * .20, $yAux, $maxW * .45 , 4, $texto, $aFont, 'T', 'L', 0, '', false);
+                $this->pdf->Line($maxW * .45, $yAux, $maxW * .45, $y1+ $y);
+                $texto = 'Apólice';
+                $this->pTextBox($maxW * .45, $yAux, $maxW * .70 , 4, $texto, $aFont, 'T', 'L', 0, '', false);
+                $this->pdf->Line($maxW * .70, $yAux, $maxW * .70, $y1+ $y);
+                $texto = 'Averbação';
+                $this->pTextBox($maxW * .70, $yAux, $maxW, 4, $texto, $aFont, 'T', 'L', 0, '', false);
                 $yAux += 4;
-            }
+                $this->pdf->Line($x, $yAux, $lineEnd, $yAux);
 
-            $y = $altura + 10 + $y1;
+                foreach($seguros as $seguro) {
+                    $texto = $seguro->respSeg;
+                    $this->pTextBox($x + 1, $yAux, $maxW * .20 , 4, $texto, $aFont, 'T', 'L', 0, '', false);
+                    $texto = $seguro->xSeg;
+                    $this->pTextBox($maxW * .20 + 1, $yAux, $maxW * .45 , 4, $texto, $aFont, 'T', 'L', 0, '', false);
+                    $texto = $seguro->nApol;
+                    $this->pTextBox($maxW * .45 + 1, $yAux, $maxW * .70 , 4, $texto, $aFont, 'T', 'L', 0, '', false);
+                    $texto = $seguro->nAverb;
+                    $this->pTextBox($maxW * .70 + 1, $yAux, $maxW, 4, $texto, $aFont, 'T', 'L', 0, '', false);
+                    $yAux += 4;
+                }
+
+                $y = $altura + 10 + $y1;
+            } else {
+                foreach ($seguros as $seguro){
+                    $this->xuxoObs."$seguro->nAverb,";
+                }
+
+            }
         } else {
             $y = $altura + 7;
         }
