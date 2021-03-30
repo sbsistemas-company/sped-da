@@ -886,9 +886,8 @@ class Damdfe extends Common
 
         $averbado = false;
         $seguros = [];
-        $len = $this->seg->item($i)->getElementsByTagName('nAver')->length;
         for ($i = 0; $i < $this->seg->length; $i++) {
-            for ($j = 0; $j < $len; $j++) {
+            for ($j = 0; $j < $this->seg->item($i)->getElementsByTagName('nAver')->length; $j++) {
                 if (strlen($this->seg->item($i)->getElementsByTagName('nAver')->item($j)->nodeValue) == 40) {
 
                     $averbado = true;
