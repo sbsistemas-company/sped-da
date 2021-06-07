@@ -889,7 +889,6 @@ class Damdfe extends Common
         for ($i = 0; $i < $this->seg->length; $i++) {
             for ($j = 0; $j < $this->seg->item($i)->getElementsByTagName('nAver')->length; $j++) {
                 if (strlen($this->seg->item($i)->getElementsByTagName('nAver')->item($j)->nodeValue) == 40) {
-
                     $averbado = true;
                     $seguro = new \stdClass();
                     if ($this->seg->item($i)->getElementsByTagName('respSeg')->item(0)->nodeValue == 1) {
@@ -957,8 +956,9 @@ class Damdfe extends Common
 
                 $y = $altura + 10 + $y1;
             } else {
-                foreach($seguros as $seguro)
+                foreach ($seguros as $seguro) {
                     $this->xuxoObs .= $seguro->nAverb.", ";
+                }
                 $y = $altura + 7;
             }
         } else {
