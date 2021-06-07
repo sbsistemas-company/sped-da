@@ -1067,6 +1067,7 @@ class Damdfe extends Common
         if ($this->xuxoObs != '') {
             $texto.= 'nro Averbações: ';
             $texto.=$this->xuxoObs;
+            $this->xuxoObs = ''; // Algumas vezes é chamado 2x o footerMdfe, setta obs para "" para não enrtar no if quando acontescer isso.
         }
 
         $aFont = array('font'=>$this->fontePadrao, 'size'=>8, 'style'=>'');
